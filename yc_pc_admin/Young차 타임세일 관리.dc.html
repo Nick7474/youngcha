@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#F4F6F9}
+  a{color:#05B8CE;text-decoration:none}
+  a:hover{color:#0398AB}
+  [data-noscroll]{scrollbar-width:thin;scrollbar-color:#D5DCE5 transparent}
+  [data-noscroll]::-webkit-scrollbar{width:8px;height:8px}
+  [data-noscroll]::-webkit-scrollbar-thumb{background:#D5DCE5;border-radius:4px}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.3}}
+  input:focus,select:focus{outline:none}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:#E7ECF2;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#05B8CE;border:3px solid #fff;box-shadow:0 2px 8px rgba(5,184,206,.4);cursor:pointer}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
+  <div style="{{ sidebarWrapStyle }}">
+    <dc-import name="AdminSidebar" active="sale" collapsed="{{ collapsed }}" style="width:100%;height:100%" hint-size="240px,100%"></dc-import>
+  </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <dc-import name="AdminTopbar" title="타임세일 관리" style="display:block;width:100%" hint-size="100%,74px"></dc-import>
+    <div data-noscroll style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- TOP: active sale + KPIs -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:stretch">
+        <!-- active sale hero -->
+        <div style="border-radius:18px;padding:24px 26px;background:linear-gradient(130deg,#05B8CE 0%,#24D7CB 55%,#26D4A3 120%);color:#fff;box-shadow:0 18px 40px -18px rgba(5,184,206,.6);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
+          <div style="position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.09)"></div>
+          <div style="position:relative">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+              <span style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:#fff;animation:livedot 1.4s ease-in-out infinite"></span>진행 중</span>
+              <span style="font-size:13.5px;font-weight:600;opacity:.9">오프피크 심야 타임세일</span>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:6px">
+              <span style="font-size:54px;font-weight:800;letter-spacing:-2px;line-height:1">{{ activePct }}%</span>
+              <span style="font-size:18px;font-weight:700;opacity:.92;padding-bottom:10px;white-space:nowrap">할인 적용 중</span>
+            </div>
+            <div style="font-size:14px;opacity:.9;font-weight:500;white-space:nowrap">전 상품 대상 · 00:00 ~ 06:00 · 결제 시 자동 적용</div>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:22px">
+            <div>
+              <div style="font-size:12.5px;opacity:.8;font-weight:600;margin-bottom:4px">종료까지</div>
+              <div style="font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px">{{ activeCountdown }}</div>
+            </div>
+            <div style="display:flex;gap:9px">
+              <button onClick="{{ onEditActive }}" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>수정</button>
+              <button onClick="{{ onStopActive }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:none;color:#DC2626;padding:11px 16px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>중단</button>
+            </div>
+          </div>
+        </div>
+        <!-- KPI 2x2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:34px;height:34px;border-radius:10px;background:#E6FAFB;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#05B8CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/></svg></span><span style="font-size:13px;color:#64748B;font-weight:600;white-space:nowrap">타임세일 매출</span></div>
+            <div style="font-size:23px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">328,000<span style="font-size:14px">원</span></div>
+            <div style="font-size:12px;color:#12B886;font-weight:700;margin-top:4px">전체 매출의 26.3%</div>
+          </div>
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:34px;height:34px;border-radius:10px;background:#E9F0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span><span style="font-size:13px;color:#64748B;font-weight:600;white-space:nowrap">참여 건수</span></div>
+            <div style="font-size:23px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">14<span style="font-size:14px;color:#94A3B8">건</span></div>
+            <div style="font-size:12px;color:#94A3B8;font-weight:500;margin-top:4px">오늘 세차 40건 중</div>
+          </div>
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:34px;height:34px;border-radius:10px;background:#FEF3E2;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 11.4 12.4 3.2A2 2 0 0 0 11 2.6H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .6 1.4l8.2 8.2a2 2 0 0 0 2.8 0l6.9-6.9a2 2 0 0 0 0-2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg></span><span style="font-size:13px;color:#64748B;font-weight:600;white-space:nowrap">평균 할인율</span></div>
+            <div style="font-size:23px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">18.5<span style="font-size:14px">%</span></div>
+            <div style="font-size:12px;color:#94A3B8;font-weight:500;margin-top:4px">활성 슬롯 7개 기준</div>
+          </div>
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:34px;height:34px;border-radius:10px;background:#E4FAF3;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0FA588" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><span style="font-size:13px;color:#64748B;font-weight:600;white-space:nowrap">유휴시간 전환율</span></div>
+            <div style="font-size:23px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">+42<span style="font-size:14px">%</span></div>
+            <div style="font-size:12px;color:#12B886;font-weight:700;margin-top:4px">세일 미적용 대비</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOURLY PRICING GRID -->
+      <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:17px;font-weight:800;color:#0B2A46;white-space:nowrap">시간대별 다이나믹 요금</span>
+            <span style="font-size:12.5px;color:#94A3B8;font-weight:500">시간을 클릭해 할인율을 조정하세요</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onClick="{{ onApplyPreset }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E7ECF2;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:#475569;cursor:pointer" style-hover="color:#05B8CE"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg>오프피크 자동 추천</button>
+            <button onClick="{{ onSaveGrid }}" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#24D7CB,#05B8CE);border:none;border-radius:10px;padding:8px 15px;font-size:13px;font-weight:700;color:#fff;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>저장</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0 16px">
+          <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:11px;height:11px;border-radius:3px;background:#F1F4F8;border:1px solid #E1E7EF"></span>정상가</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:11px;height:11px;border-radius:3px;background:#C6EDE0"></span>5–10% 할인</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:11px;height:11px;border-radius:3px;background:#6FE0C2"></span>15–20% 할인</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:11px;height:11px;border-radius:3px;background:#24D7CB"></span>25%+ 할인</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:11px;height:11px;border-radius:3px;background:#0B2A46"></span>현재 시간</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:7px">
+          <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="24">
+            <button onClick="{{ slot.onClick }}" style="{{ slot.style }}">
+              <span style="font-size:12.5px;font-weight:700;{{ slot.hourColor }}">{{ slot.hour }}</span>
+              <span style="font-size:15px;font-weight:800;{{ slot.pctColor }}">{{ slot.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid #F1F4F8">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;color:#64748B;font-weight:600">활성 슬롯</span><span style="font-size:15px;font-weight:800;color:#0B2A46">{{ activeSlots }}개</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;color:#64748B;font-weight:600">최대 할인</span><span style="font-size:15px;font-weight:800;color:#05B8CE">{{ maxDiscount }}%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;color:#64748B;font-weight:600">평균 할인</span><span style="font-size:15px;font-weight:800;color:#0B2A46">{{ avgDiscount }}%</span></div>
+        </div>
+      </div>
+
+      <!-- SCHEDULED SALES -->
+      <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <span style="font-size:17px;font-weight:800;color:#0B2A46">예약된 타임세일</span>
+          <button onClick="{{ onNewSale }}" style="display:flex;align-items:center;gap:6px;background:#0B2A46;border:none;border-radius:11px;padding:10px 16px;font-size:14px;font-weight:700;color:#fff;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>새 타임세일</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ sales }}" as="sale" hint-placeholder-count="4">
+            <div onClick="{{ sale.onDetail }}" style="display:flex;align-items:center;gap:16px;padding:15px 16px;border:1px solid #EEF2F7;border-radius:14px;background:#FAFBFD;cursor:pointer" style-hover="border-color:#C7EEF3">
+              <span style="{{ sale.iconStyle }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span style="font-size:14.5px;font-weight:700;color:#0B2A46">{{ sale.name }}</span><span style="{{ sale.badgeStyle }}">{{ sale.badge }}</span></div>
+                <div style="font-size:13px;color:#64748B">{{ sale.detail }}</div>
+              </div>
+              <div style="text-align:center;flex:0 0 auto"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:2px">할인율</div><div style="font-size:19px;font-weight:800;color:#05B8CE">{{ sale.pct }}%</div></div>
+              <div style="text-align:center;flex:0 0 auto;width:104px"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:2px">적용 시간</div><div style="font-size:13.5px;font-weight:700;color:#334155;font-variant-numeric:tabular-nums">{{ sale.time }}</div></div>
+              <label onClick="{{ sale.stop }}" style="display:flex;align-items:center;cursor:pointer;flex:0 0 auto">
+                <input type="checkbox" checked="{{ sale.on }}" onChange="{{ sale.onToggle }}" style="display:none">
+                <span style="{{ sale.switchStyle }}"><span style="{{ sale.knobStyle }}"></span></span>
+              </label>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLOT EDIT MODAL -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onCloseModal }}" style="position:fixed;inset:0;background:rgba(11,42,70,.42);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:90;padding:20px">
+      <div onClick="{{ stop }}" style="width:420px;max-width:100%;background:#fff;border-radius:20px;box-shadow:0 30px 70px -20px rgba(11,42,70,.5);padding:26px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:19px;font-weight:800;color:#0B2A46">{{ modalTitle }}</span>
+          <button onClick="{{ onCloseModal }}" style="background:none;border:none;cursor:pointer;color:#94A3B8;display:flex;padding:2px" style-hover="color:#334155"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+        <p style="font-size:13.5px;color:#64748B;margin-bottom:22px">{{ modalSub }}</p>
+        <div style="text-align:center;margin-bottom:18px"><span style="font-size:56px;font-weight:800;color:#05B8CE;letter-spacing:-2px">{{ modalPct }}</span><span style="font-size:24px;font-weight:800;color:#05B8CE">%</span></div>
+        <input type="range" min="0" max="40" step="5" value="{{ modalPct }}" onInput="{{ onSlider }}" style="width:100%;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:22px"><span>0% (정상가)</span><span>40% (최대)</span></div>
+        <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:14px 16px;margin-bottom:22px">
+          <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:9px"><span style="color:#64748B">기본 세차 (20,000원)</span><span style="font-weight:800;color:#0B2A46">{{ ex1 }}원</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:#64748B">프리미엄 세차 (38,000원)</span><span style="font-weight:800;color:#0B2A46">{{ ex2 }}원</span></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ onCloseModal }}" style="flex:1;height:48px;border-radius:13px;border:1.5px solid #E1E7EF;background:#fff;color:#64748B;font-size:15px;font-weight:700;cursor:pointer">취소</button>
+          <button onClick="{{ onApplyModal }}" style="flex:2;height:48px;border-radius:13px;border:none;background:linear-gradient(135deg,#24D7CB,#05B8CE);color:#fff;font-size:15px;font-weight:800;cursor:pointer">적용</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <dc-import name="AdminDrawer" open="{{ drawerOpen }}" eyebrow="타임세일 상세" title="{{ dTitle }}" subtitle="{{ dSubtitle }}" avatar-path-d="{{ dAvatarPath }}" avatar-bg1="{{ dBg1 }}" avatar-bg2="{{ dBg2 }}" badge="{{ dBadge }}" blocks="{{ dBlocks }}" actions="{{ dActions }}" on-close="{{ onCloseDrawer }}" style="position:fixed;left:0;top:0;width:0;height:0;z-index:88" hint-size="0px,0px"></dc-import>
+  <div style="{{ toastStyle }}">{{ toast }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
+}">
+class Component extends DCLogic {
+  DEFAULT = { 0:25,1:25,2:30,3:30,4:20,5:15,6:10,7:5,8:0,9:0,10:0,11:0,12:0,13:0,14:5,15:10,16:5,17:0,18:0,19:0,20:0,21:5,22:15,23:20 };
+  state = {
+    t: 0, collapsed: false, discounts: { ...this.DEFAULT }, saleEnd: null,
+    modalOpen: false, modalHour: null, modalPct: 0, drawerOpen: false, selSale: null,
+    sales: [
+      { id:'a', name:'심야 오프피크 세일', detail:'매일 반복 · 전 상품 대상', pct:25, time:'00:00–06:00', on:true, live:true, repeat:'매일 반복', target:'전 상품', rev:328000, part:14, goal:390000 },
+      { id:'b', name:'평일 오후 한산세일', detail:'월–금 · 유휴시간 유도', pct:10, time:'14:00–16:00', on:true, live:false, repeat:'월–금', target:'전 상품', rev:96000, part:5, goal:150000 },
+      { id:'c', name:'주말 아침 얼리버드', detail:'토·일 · 프리미엄 제외', pct:15, time:'07:00–09:00', on:false, live:false, repeat:'토·일', target:'프리미엄 제외', rev:0, part:0, goal:120000 },
+      { id:'d', name:'우천 특가 세일', detail:'조건부 · 기상 연동 자동', pct:20, time:'수동 발동', on:false, live:false, repeat:'기상 연동', target:'전 상품', rev:0, part:0, goal:100000 },
+    ],
+    toast: '',
+  };
+
+  componentDidMount() {
+    try { this.setState({ collapsed: localStorage.getItem('yc_sidebar_collapsed') === '1' }); } catch (e) {}
+    const now = new Date(); const end = new Date(now); end.setHours(6, 0, 0, 0); if (end <= now) end.setDate(end.getDate() + 1);
+    this.setState({ saleEnd: end.getTime() });
+    this.timer = setInterval(() => this.setState(s => ({ t: s.t + 1 })), 1000);
+    this._onToggle = () => this.setState(s => { const v = !s.collapsed; try { localStorage.setItem('yc_sidebar_collapsed', v ? '1' : '0'); } catch (e) {} return { collapsed: v }; });
+    window.addEventListener('yc:sidebar-toggle', this._onToggle);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this._tt); window.removeEventListener('yc:sidebar-toggle', this._onToggle); }
+
+  flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  hms(ms) { let s = Math.max(0, Math.floor(ms/1000)); const h = Math.floor(s/3600), m = Math.floor((s%3600)/60); s %= 60; const p = n => String(n).padStart(2,'0'); return `${p(h)}:${p(m)}:${p(s)}`; }
+
+  buildSaleDrawer(id) {
+    const o = id ? this.state.sales.find(x => x.id === id) : null;
+    if (!o) return { title:'', subtitle:'', badge:{text:'',bg:'#EFF2F6',fg:'#64748B'}, blocks:[], actions:[], path:'M12 7v5l3 2', bg1:'#94A3B8', bg2:'#64748B' };
+    const badge = o.live ? { text:'진행 중', bg:'#E4FAF3', fg:'#0FA588' } : (o.on ? { text:'예약됨', bg:'#EEF4FF', fg:'#2563EB' } : { text:'중지', bg:'#F1F4F8', fg:'#94A3B8' });
+    const achieved = o.goal > 0 ? Math.round(o.rev / o.goal * 100) : 0;
+    const blocks = [];
+    blocks.push({ type:'rows', heading:'세일 정보', items:[
+      { label:'할인율', value:o.pct + '%', color:'accent', strong:true },
+      { label:'적용 시간', value:o.time },
+      { label:'반복', value:o.repeat },
+      { label:'대상 상품', value:o.target },
+    ]});
+    if (o.live || o.rev > 0) {
+      blocks.push({ type:'progress', heading:'성과', items:[
+        { label:'목표 달성률', value:achieved + '%', pct:achieved },
+        { label:'참여 전환', value:o.part + '건', pct:Math.min(100, o.part * 6), color:'blue' },
+      ]});
+      blocks.push({ type:'cards', cols:2, items:[
+        { top:'세일 매출', mid:o.rev.toLocaleString() + '원', color:'accent' },
+        { top:'참여 건수', mid:o.part + '건' },
+      ]});
+    } else {
+      blocks.push({ type:'note', tone:'info', text: o.id === 'd' ? '기상 API와 연동되어 강수 감지 시 자동 발동되는 조건부 세일입니다.' : '아직 실행되지 않은 예약 세일입니다. 활성화하면 지정 시간에 자동 적용됩니다.' });
+    }
+    const actions = [];
+    actions.push({ text: o.on ? '세일 중지' : '세일 활성화', kind: o.on ? 'ghost' : 'primary', onClick: () => { this.setState(st => ({ sales: st.sales.map(x => x.id === o.id ? { ...x, on: !x.on, live: !x.on && x.live } : x) })); this.flash(`"${o.name}" ${o.on ? '중지' : '활성화'}했습니다`); } });
+    actions.push({ text:'수정', kind:'ghost', onClick: () => this.flash('세일 편집 마법사는 준비 중입니다') });
+    return { title:o.name, subtitle:o.time, badge, blocks, actions, path:'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 5v5l3 2', bg1:'#24D7CB', bg2:'#05B8CE' };
+  }
+
+  slotColor(pct) {
+    if (pct === 0) return { bg:'#F1F4F8', bd:'#E1E7EF', hour:'color:#94A3B8', pct:'color:#B4BECC' };
+    if (pct <= 10) return { bg:'#E7F7F0', bd:'#C6EDE0', hour:'color:#0FA588', pct:'color:#0FA588' };
+    if (pct <= 20) return { bg:'#C6F0E2', bd:'#9EE3CD', hour:'color:#0B7A63', pct:'color:#0B7A63' };
+    return { bg:'#24D7CB', bd:'#12C6BA', hour:'color:#053B37', pct:'color:#043330' };
+  }
+
+  renderVals() {
+    const s = this.state, curHour = new Date().getHours();
+    const slots = Array.from({ length: 24 }, (_, h) => {
+      const pct = s.discounts[h], c = this.slotColor(pct), cur = h === curHour;
+      return {
+        hour: String(h).padStart(2, '0'),
+        label: pct === 0 ? '정상' : '-' + pct + '%',
+        hourColor: cur ? 'color:#9FE9E1' : c.hour,
+        pctColor: cur ? 'color:#fff' : c.pct,
+        style: `display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 4px;border-radius:12px;cursor:pointer;transition:all .15s;border:1.5px solid ${cur ? '#0B2A46' : c.bd};background:${cur ? '#0B2A46' : c.bg};` + (cur ? 'box-shadow:0 0 0 3px rgba(11,42,70,.15);' : ''),
+        onClick: () => this.setState({ modalOpen: true, modalHour: h, modalPct: pct }),
+      };
+    });
+    const vals = Object.values(s.discounts);
+    const active = vals.filter(v => v > 0);
+    const activeSlots = active.length;
+    const maxDiscount = vals.reduce((a, b) => Math.max(a, b), 0);
+    const avgDiscount = active.length ? Math.round(active.reduce((a, b) => a + b, 0) / active.length) : 0;
+
+    const sales = s.sales.map(o => ({
+      ...o,
+      iconStyle: `width:44px;height:44px;border-radius:13px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:${o.on ? '#05B8CE' : '#94A3B8'};background:${o.on ? '#E6FAFB' : '#F1F4F8'}`,
+      badge: o.live ? '진행 중' : (o.on ? '예약됨' : '중지'),
+      badgeStyle: `font-size:11px;font-weight:800;padding:2px 8px;border-radius:7px;` + (o.live ? 'background:#E4FAF3;color:#0FA588' : (o.on ? 'background:#EEF4FF;color:#2563EB' : 'background:#F1F4F8;color:#94A3B8')),
+      switchStyle: `position:relative;width:44px;height:26px;border-radius:13px;transition:background .2s;background:${o.on ? '#24D7CB' : '#CBD5E1'}`,
+      knobStyle: `position:absolute;top:3px;left:${o.on ? '21px' : '3px'};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:left .2s`,
+      onToggle: () => { this.setState(st => ({ sales: st.sales.map(x => x.id === o.id ? { ...x, on: !x.on, live: !x.on && x.live } : x) })); this.flash(`"${o.name}" ${o.on ? '중지' : '활성화'}했습니다`); },
+      stop: e => e.stopPropagation(),
+      onDetail: () => this.setState({ selSale: o.id, drawerOpen: true }),
+    }));
+
+    const dd = this.buildSaleDrawer(s.selSale);
+
+    const mp = s.modalPct;
+    return {
+      collapsed: s.collapsed,
+      sidebarWrapStyle: `flex:0 0 ${s.collapsed ? 74 : 240}px;height:100%;position:relative;z-index:30;transition:flex-basis .25s ease`,
+      activePct: 25,
+      activeCountdown: s.saleEnd ? this.hms(s.saleEnd - Date.now()) : '--:--:--',
+      onEditActive: () => this.flash('진행 중 세일 편집 패널은 준비 중입니다'),
+      onStopActive: () => this.flash('진행 중인 심야 타임세일을 중단했습니다'),
+      slots, activeSlots, maxDiscount, avgDiscount,
+      onApplyPreset: () => { this.setState({ discounts: { ...this.DEFAULT } }); this.flash('오프피크 자동 추천 요금을 적용했습니다'); },
+      onSaveGrid: () => this.flash('시간대별 요금표를 저장했습니다'),
+      sales,
+      onNewSale: () => this.flash('새 타임세일 생성 마법사는 준비 중입니다'),
+      modalOpen: s.modalOpen,
+      modalTitle: s.modalHour != null ? `${String(s.modalHour).padStart(2,'0')}:00 – ${String((s.modalHour+1)%24).padStart(2,'0')}:00 요금 설정` : '',
+      modalSub: '이 시간대에 적용할 할인율을 선택하세요. 결제 시 고객 앱에 자동 반영됩니다.',
+      modalPct: mp,
+      ex1: Math.round(20000 * (1 - mp/100)).toLocaleString(),
+      ex2: Math.round(38000 * (1 - mp/100)).toLocaleString(),
+      onSlider: e => this.setState({ modalPct: parseInt(e.target.value, 10) }),
+      onCloseModal: () => this.setState({ modalOpen: false }),
+      stop: e => e.stopPropagation(),
+      drawerOpen: s.drawerOpen,
+      dTitle: dd.title, dSubtitle: dd.subtitle, dBadge: dd.badge, dBlocks: dd.blocks, dActions: dd.actions, dAvatarPath: dd.path, dBg1: dd.bg1, dBg2: dd.bg2,
+      onCloseDrawer: () => this.setState({ drawerOpen: false }),
+      onApplyModal: () => { const h = s.modalHour; this.setState(st => ({ discounts: { ...st.discounts, [h]: st.modalPct }, modalOpen: false })); this.flash(`${String(h).padStart(2,'0')}:00 시간대를 ${mp === 0 ? '정상가' : mp + '% 할인'}으로 설정했습니다`); },
+      toast: s.toast,
+      toastStyle: `position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(${s.toast ? '0' : '14px'});background:#0B2A46;color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 16px 40px -10px rgba(11,42,70,.5);opacity:${s.toast ? '1' : '0'};pointer-events:none;transition:all .3s ease;z-index:100`,
+    };
+  }
+}
+</script>
+</body>
+</html>

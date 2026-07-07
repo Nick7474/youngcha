@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m http.server 8123)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8123/Young%EC%B0%A8%20%EA%B4%80%EB%A6%AC%EC%9E%90%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C.dc.html\")",
+      "Bash(node \"C:\\\\Users\\\\wyh7\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-wyh7-OneDrive------------00-AIMWID-06-Young--01-HTML------------------\\\\1903af85-4a63-4389-838f-f6842489e127\\\\scratchpad\\\\server.js\" \"c:/Users/wyh7/OneDrive - 서울상도초등학교/00_AIMWID/06_Young차/01_HTML/영차 모바일 앱 대시보드 디자인\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/Young%EC%B0%A8%20%EA%B4%80%EB%A6%AC%EC%9E%90%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C.dc.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/AdminSidebar.dc.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/AdminTopbar.dc.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/AdminDrawer.dc.html\")",
+      "Bash(curl -s \"http://127.0.0.1:8123/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/Young%EC%B0%A8%20%EB%A1%9C%EA%B7%B8%EC%9D%B8.dc.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://127.0.0.1:8123/uploads/YoungCha_Logo%201.svg\")"
+    ]
+  }
+}

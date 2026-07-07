@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Young차 - 마이페이지</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Profile */
+.profile-card{margin:16px 20px 0;padding:20px;background:var(--bg-card);border-radius:var(--r-xl);box-shadow:var(--sh-md);position:relative;overflow:hidden}
+[data-theme="dark"] .profile-card{border:1px solid var(--bg-div)}
+.profile-card::before{content:'';position:absolute;top:0;right:0;width:120px;height:120px;background:var(--grad);opacity:.07;border-radius:0 var(--r-xl) 0 120px}
+.pc-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.pc-avatar{width:56px;height:56px;border-radius:var(--r-f);background:var(--grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--sh-mint)}
+.pc-avatar svg{width:28px;height:28px;stroke:#fff;stroke-width:1.8;fill:none}
+.pc-name{font-size:20px;font-weight:800;color:var(--t1)}
+.pc-since{font-size:13px;color:var(--t3);margin-top:3px}
+.pc-edit{margin-left:auto;padding:7px 16px;border-radius:var(--r-f);border:1.5px solid var(--bg-div);font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;transition:all var(--tf)}
+.pc-edit:hover{border-color:var(--mint);color:var(--mint)}
+
+.pc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--bg);border-radius:var(--r-md);padding:4px 0}
+[data-theme="dark"] .pc-stats{background:var(--bg-div)}
+.pc-stat{text-align:center;padding:12px 8px}
+.pc-stat-val{font-family:var(--en);font-size:22px;font-weight:800;color:var(--t1);line-height:1}
+.pc-stat-val.mint{color:var(--mint)}
+.pc-stat-label{font-size:11px;color:var(--t3);font-weight:600;margin-top:3px}
+.pc-stat-div{border-right:1px solid var(--bg-div)}
+
+/* Level badge */
+.level-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:var(--grad);border-radius:var(--r-f);margin-bottom:14px}
+.level-badge svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;fill:none}
+.level-badge span{font-size:12px;font-weight:700;color:#fff}
+
+/* Settings sections */
+.settings-section{margin:20px 0 0}
+.settings-label{font-size:12px;font-weight:700;color:var(--t3);letter-spacing:.5px;padding:0 20px 10px;text-transform:uppercase}
+
+.setting-row{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--bg-card);border-bottom:1px solid var(--bg-div);cursor:pointer;transition:background var(--tf);text-decoration:none;color:inherit}
+.setting-row:first-of-type{border-top:1px solid var(--bg-div)}
+.setting-row:hover{background:var(--mint-light)}
+.sr-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sr-icon svg{width:20px;height:20px;stroke-width:1.8;fill:none}
+.sr-body{flex:1}
+.sr-title{font-size:15px;font-weight:600;color:var(--t1)}
+.sr-desc{font-size:12px;color:var(--t3);margin-top:2px}
+.sr-right{display:flex;align-items:center;gap:8px;color:var(--t3)}
+.sr-right svg{width:16px;height:16px;stroke-width:2}
+.sr-val{font-size:14px;font-weight:600;color:var(--t2)}
+
+/* Coupon card */
+.coupon-card{margin:16px 20px 0;padding:18px;background:linear-gradient(135deg,#1A1A2E 0%,#0D1B2A 100%);border-radius:var(--r-lg);position:relative;overflow:hidden;cursor:pointer}
+[data-theme="dark"] .coupon-card{background:linear-gradient(135deg,#0a0e1a 0%,#0d1527 100%);border:1px solid rgba(36,215,203,.2)}
+.coupon-card::before{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;border:2px dashed rgba(36,215,203,.3);border-radius:50%}
+.coupon-card::after{content:'';position:absolute;right:30px;bottom:-15px;width:50px;height:50px;border:2px dashed rgba(36,215,203,.2);border-radius:50%}
+.cc-label{font-size:11px;font-weight:700;color:rgba(36,215,203,.7);letter-spacing:.5px;margin-bottom:6px}
+.cc-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.cc-desc{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:14px}
+.cc-bottom{display:flex;align-items:center;justify-content:space-between}
+.cc-exp{font-size:12px;color:rgba(255,255,255,.4)}
+.cc-btn{padding:7px 16px;background:var(--mint);border-radius:var(--r-f);font-size:13px;font-weight:700;color:#fff;cursor:pointer;border:none}
+
+/* Support section */
+.faq-item{border-bottom:1px solid var(--bg-div)}
+.faq-q{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;transition:background var(--tf)}
+.faq-q:hover{background:var(--mint-light)}
+.faq-q svg{width:18px;height:18px;stroke:var(--t3);stroke-width:1.8;fill:none;flex-shrink:0;transition:transform var(--tf)}
+.faq-q.open svg{transform:rotate(180deg);stroke:var(--mint)}
+.faq-q-text{flex:1;font-size:14px;font-weight:600;color:var(--t1)}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s ease, padding .3s ease}
+.faq-a.open{max-height:200px;padding:0 20px 16px}
+.faq-a-text{font-size:13px;color:var(--t2);line-height:1.7;padding:12px 14px;background:var(--bg);border-radius:var(--r-md)}
+[data-theme="dark"] .faq-a-text{background:var(--bg-div)}
+
+/* Error report */
+.err-btn{margin:16px 20px;display:flex;align-items:center;gap:12px;padding:16px;background:var(--red-bg);border-radius:var(--r-lg);border:1.5px solid rgba(240,68,56,.25);cursor:pointer;transition:all var(--tf)}
+.err-btn:hover{background:var(--red);border-color:var(--red)}
+.err-btn:hover .err-txt{color:#fff}
+.err-btn:hover .err-desc{color:rgba(255,255,255,.7)}
+.err-btn:hover svg{stroke:#fff}
+.err-icon{width:40px;height:40px;border-radius:var(--r-md);background:rgba(240,68,56,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.err-icon svg{width:22px;height:22px;stroke:var(--red);stroke-width:1.8;fill:none;transition:stroke var(--tf)}
+.err-txt{font-size:15px;font-weight:700;color:var(--red);transition:color var(--tf)}
+.err-desc{font-size:12px;color:var(--t3);margin-top:2px;transition:color var(--tf)}
+
+/* Logout */
+.logout-row{padding:16px 20px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--t3);font-size:14px;font-weight:600;transition:color var(--tf)}
+.logout-row:hover{color:var(--red)}
+.logout-row svg{width:18px;height:18px;stroke-width:2;fill:none;transition:stroke var(--tf)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-hdr">
+    <div class="top-hdr__title">마이페이지</div>
+    <div class="top-hdr__acts">
+      <div class="icon-btn" onclick="Toast.show('설정 페이지')">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="3"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.9 4.9l1.4 1.4M15.7 15.7l1.4 1.4M4.9 17.1l1.4-1.4M15.7 6.3l1.4-1.4" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- Profile -->
+    <div class="profile-card a-fade-up">
+      <div class="level-badge">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 1l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L1.2 5.2l4-.6z" stroke-linejoin="round"/></svg>
+        <span>VIP 세차러 · 골드 등급</span>
+      </div>
+      <div class="pc-top">
+        <div class="pc-avatar">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor"><circle cx="14" cy="10" r="5"/><path d="M5 24c0-5 4-9 9-9s9 4 9 9" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="pc-name">김민수</div>
+          <div class="pc-since">Young차 회원 · 2024년 12월 가입</div>
+        </div>
+        <button class="pc-edit" onclick="Toast.show('프로필 편집')">편집</button>
+      </div>
+      <div class="pc-stats">
+        <div class="pc-stat pc-stat-div">
+          <div class="pc-stat-val mint">12</div>
+          <div class="pc-stat-label">총 세차</div>
+        </div>
+        <div class="pc-stat pc-stat-div">
+          <div class="pc-stat-val">96,000</div>
+          <div class="pc-stat-label">결제(원)</div>
+        </div>
+        <div class="pc-stat">
+          <div class="pc-stat-val">28,800</div>
+          <div class="pc-stat-label">절약(원)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coupon -->
+    <div class="coupon-card a-fade-up s1" onclick="Toast.show('쿠폰을 사용합니다!')">
+      <div class="cc-label">🎁 보유 쿠폰 1장</div>
+      <div class="cc-title">타임세일 30% 할인</div>
+      <div class="cc-desc">마케팅 동의 혜택 · 다음 세차에 사용</div>
+      <div class="cc-bottom">
+        <div class="cc-exp">~ 2025.04.30 만료</div>
+        <button class="cc-btn">사용하기</button>
+      </div>
+    </div>
+
+    <!-- App settings -->
+    <div class="settings-section a-fade-up s2">
+      <div class="settings-label">앱 설정</div>
+
+      <div class="setting-row">
+        <div class="sr-icon" style="background:var(--bg-div)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="var(--t2)"><circle cx="10" cy="10" r="7"/><path d="M7 10h6M10 7v6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">화면 모드</div>
+          <div class="sr-desc">라이트 / 다크 모드 전환</div>
+        </div>
+        <div class="sr-right">
+          <span class="sr-val" id="theme-label">라이트 모드</span>
+          <label class="toggle theme-toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" onchange="toggleTheme(this)">
+            <div class="tgl-track"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="sr-icon" style="background:var(--green-bg)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="var(--mint)"><path d="M10 2a6 6 0 00-6 6v2.5L2.5 13h15L16 10.5V8a6 6 0 00-6-6z" stroke-linecap="round"/><path d="M8 16a2 2 0 004 0" stroke-linecap="round"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">타임세일 알림</div>
+          <div class="sr-desc">빈 베이 할인 알림 수신</div>
+        </div>
+        <div class="sr-right">
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" checked onchange="Toast.show(this.checked?'타임세일 알림 ON':'타임세일 알림 OFF')">
+            <div class="tgl-track"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="sr-icon" style="background:rgba(5,184,206,0.10)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#05B8CE"><circle cx="10" cy="7" r="3"/><path d="M4 12c1-2 3.5-3 6-3s5 1 6 3" stroke-linecap="round"/><path d="M13 17l2-2 2 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">세차 지수 알림</div>
+          <div class="sr-desc">날씨 기반 세차 추천 알림</div>
+        </div>
+        <div class="sr-right">
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" checked onchange="Toast.show(this.checked?'세차 지수 알림 ON':'세차 지수 알림 OFF')">
+            <div class="tgl-track"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="sr-icon" style="background:rgba(255,142,83,0.12)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#FF8E53"><path d="M10 3v1M10 16v1M3 10h1M16 10h1M5.1 5.1l.7.7M14.2 14.2l.7.7M5.1 14.9l.7-.7M14.2 5.8l.7-.7" stroke-linecap="round"/><circle cx="10" cy="10" r="3.5"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">세차 종료 알림</div>
+          <div class="sr-desc">1분 전 진동 및 푸시 알림</div>
+        </div>
+        <div class="sr-right">
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" checked onchange="Toast.show(this.checked?'종료 알림 ON':'종료 알림 OFF')">
+            <div class="tgl-track"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="settings-section a-fade-up s3">
+      <div class="settings-label">계정</div>
+
+      <div class="setting-row" onclick="Toast.show('결제 수단 관리')">
+        <div class="sr-icon" style="background:var(--bg-div)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="var(--t2)"><rect x="2" y="5" width="16" height="11" rx="2"/><path d="M2 9h16" stroke-linecap="round"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">결제 수단 관리</div>
+          <div class="sr-desc">신한카드 ****1234</div>
+        </div>
+        <div class="sr-right">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="setting-row" onclick="window.location.href='history.html'">
+        <div class="sr-icon" style="background:var(--bg-div)">
+          <svg viewBox="0 0 20 20" fill="none" stroke="var(--t2)"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 4V2M13 4V2M3 8h14" stroke-linecap="round"/></svg>
+        </div>
+        <div class="sr-body">
+          <div class="sr-title">세차 내역</div>
+          <div class="sr-desc">전체 세차 기록 보기</div>
+        </div>
+        <div class="sr-right">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div class="settings-section a-fade-up s4">
+      <div class="settings-label">고객 지원</div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor"><circle cx="9" cy="9" r="7"/><path d="M7 7c0-1 1-2 2-2s2 1 2 2-1 2-2 2v1M9 13v.5" stroke-linecap="round"/></svg>
+          <div class="faq-q-text">결제 후 베이가 작동하지 않으면?</div>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-text">결제 성공 후 5초 이내 베이가 작동하지 않으면 자동으로 결제가 취소됩니다. 별도 환불 신청 없이 즉시 환불 처리됩니다. 문제가 지속되면 기기 오류 신고를 이용해주세요.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor"><circle cx="9" cy="9" r="7"/><path d="M7 7c0-1 1-2 2-2s2 1 2 2-1 2-2 2v1M9 13v.5" stroke-linecap="round"/></svg>
+          <div class="faq-q-text">타임세일은 언제 적용되나요?</div>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-text">베이가 모두 비어있는 유휴 시간에 자동으로 30% 타임세일이 시작됩니다. 알림 동의 시 반경 5km 이내에 있을 때 푸시 알림을 받을 수 있습니다.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor"><circle cx="9" cy="9" r="7"/><path d="M7 7c0-1 1-2 2-2s2 1 2 2-1 2-2 2v1M9 13v.5" stroke-linecap="round"/></svg>
+          <div class="faq-q-text">시간 연장은 얼마까지 가능한가요?</div>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-text">1회 5분(₩3,000)씩, 최대 3회까지 연장 가능합니다. 원터치로 등록된 카드에서 자동 결제되므로 젖은 손으로도 간편하게 연장할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error report -->
+    <div class="err-btn a-fade-up" onclick="Modal.open('err-modal')">
+      <div class="err-icon">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="9"/><path d="M11 7v5M11 15v.5" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="err-txt">기기 오류 신고</div>
+        <div class="err-desc">베이 고장 또는 기기 오류를 즉시 신고하세요</div>
+      </div>
+      <svg viewBox="0 0 16 16" fill="none" stroke="var(--red)" style="width:16px;height:16px;stroke-width:2;margin-left:auto;flex-shrink:0;transition:stroke var(--tf)"><path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="div-thick" style="margin-top:16px"></div>
+
+    <!-- Legal -->
+    <div class="settings-section" style="margin-top:0;padding-top:4px">
+      <div class="settings-label">약관 및 정책</div>
+      <div class="setting-row" onclick="Toast.show('서비스 이용약관')">
+        <div class="sr-body"><div class="sr-title">서비스 이용약관</div></div>
+        <div class="sr-right"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="setting-row" onclick="Toast.show('개인정보처리방침')">
+        <div class="sr-body"><div class="sr-title">개인정보처리방침</div></div>
+        <div class="sr-right"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="setting-row" onclick="Toast.show('앱 버전: 1.0.0')">
+        <div class="sr-body"><div class="sr-title">앱 버전</div></div>
+        <div class="sr-right"><span class="sr-val">v1.0.0</span></div>
+      </div>
+    </div>
+
+    <div class="logout-row" onclick="confirmLogout()">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor"><path d="M7 3H4a1 1 0 00-1 1v10a1 1 0 001 1h3M12 13l4-4-4-4M16 9H7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      로그아웃
+    </div>
+
+    <div style="height:8px"></div>
+  </div>
+
+  <!-- GNB -->
+  <nav class="gnb">
+    <a class="gnb-item" href="home.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>홈</span>
+    </a>
+    <a class="gnb-item" href="washing.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg>
+      <span>세차중</span>
+    </a>
+    <a class="gnb-item" href="history.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 4V2M16 4V2M3 9h18M8 14h2M12 14h4M8 18h2" stroke-linecap="round"/></svg>
+      <span>세차내역</span>
+    </a>
+    <a class="gnb-item active" href="mypage.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke-linecap="round"/></svg>
+      <span>마이페이지</span>
+    </a>
+  </nav>
+
+  <!-- Error report modal -->
+  <div class="modal-overlay" id="err-modal">
+    <div class="modal">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:48px;height:48px;border-radius:var(--r-md);background:var(--red-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" style="width:24px;height:24px;stroke-width:2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 15.5v.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div style="font-size:18px;font-weight:800;color:var(--t1)">기기 오류 신고</div>
+          <div style="font-size:13px;color:var(--t3);margin-top:2px">어떤 문제가 발생했나요?</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="err-options">
+        <div class="chip chip-off" onclick="selectErr(this,'베이 작동 안됨')">베이 작동 안됨</div>
+        <div class="chip chip-off" onclick="selectErr(this,'결제 후 미작동')">결제 후 미작동</div>
+        <div class="chip chip-off" onclick="selectErr(this,'기기 파손')">기기 파손</div>
+        <div class="chip chip-off" onclick="selectErr(this,'물 공급 불량')">물 공급 불량</div>
+      </div>
+      <textarea class="inp" style="height:80px;padding:12px 16px;resize:none" placeholder="추가 내용을 입력해주세요 (선택)"></textarea>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" style="flex:1" onclick="Modal.close('err-modal')">취소</button>
+        <button class="btn btn-danger" style="flex:2" onclick="submitErr()">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M4 14v3a1 1 0 001 1h10a1 1 0 001-1v-3M10 3v11M6 9l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          신고 접수
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+function toggleTheme(el){
+  const t = Theme.toggle();
+  document.getElementById('theme-label').textContent = t==='dark'?'다크 모드':'라이트 모드';
+  Toast.show(t==='dark'?'🌙 다크 모드로 전환했습니다':'☀️ 라이트 모드로 전환했습니다');
+}
+
+function toggleFaq(el){
+  const answer = el.nextElementSibling;
+  el.classList.toggle('open');
+  answer.classList.toggle('open');
+}
+
+let selectedErr = '';
+function selectErr(el, val){
+  document.querySelectorAll('#err-options .chip').forEach(c=>{c.classList.remove('chip-on');c.classList.add('chip-off');});
+  el.classList.remove('chip-off'); el.classList.add('chip-on');
+  selectedErr = val;
+}
+
+function submitErr(){
+  if(!selectedErr){ Toast.show('오류 유형을 선택해주세요'); return; }
+  Modal.close('err-modal');
+  Toast.show('✅ 오류 신고가 접수되었습니다. 담당자가 확인합니다.');
+}
+
+function confirmLogout(){
+  if(confirm('로그아웃 하시겠습니까?')){
+    Toast.show('로그아웃 되었습니다');
+    setTimeout(()=>{ window.location.href='index.html'; }, 1000);
+  }
+}
+
+// Init theme toggle state
+document.addEventListener('DOMContentLoaded',()=>{
+  const t = localStorage.getItem('yc-theme')||'light';
+  document.querySelector('.theme-toggle input').checked = t==='dark';
+  document.getElementById('theme-label').textContent = t==='dark'?'다크 모드':'라이트 모드';
+});
+</script>
+</body>
+</html>

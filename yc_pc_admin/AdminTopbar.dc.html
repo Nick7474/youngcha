@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="width:100%;background:#fff;border-bottom:1px solid #EAEEF3;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;font-family:'Pretendard',-apple-system,sans-serif">
+  <div style="display:flex;align-items:center;gap:14px;min-width:0">
+    <button onClick="{{ onToggle }}" title="메뉴 접기/펼치기" style="background:none;border:none;cursor:pointer;padding:0;display:flex;color:#334155" style-hover="color:#05B8CE">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+    </button>
+    <h1 style="font-size:24px;font-weight:800;color:#0B2A46;white-space:nowrap">{{ title }}</h1>
+    <sc-if value="{{ subtitle }}" hint-placeholder-val="">
+      <span style="font-size:14px;color:#94A3B8;font-weight:500;white-space:nowrap;margin-left:2px">{{ subtitle }}</span>
+    </sc-if>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div style="display:flex;align-items:center;gap:8px;background:#F1F4F8;border:1px solid #E7ECF2;border-radius:12px;padding:9px 14px;cursor:pointer">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0B2A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>
+      <span style="font-size:14px;font-weight:700;color:#0B2A46;font-variant-numeric:tabular-nums">{{ dateLabel }}</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+    <button style="position:relative;background:none;border:none;cursor:pointer;color:#334155;padding:2px;display:flex" style-hover="color:#05B8CE">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;background:#EF4444;color:#fff;border-radius:9px;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff">{{ notifCount }}</span>
+    </button>
+    <div style="width:1px;height:26px;background:#E7ECF2"></div>
+    <div style="position:relative">
+      <div onClick="{{ onToggleMenu }}" style="display:flex;align-items:center;gap:9px;cursor:pointer">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#24D7CB,#05B8CE);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <span style="font-size:15px;font-weight:700;color:#0B2A46">{{ adminName }}</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{ caretStyle }}"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div style="{{ menuStyle }}">
+        <div style="padding:14px 16px;border-bottom:1px solid #F1F4F8">
+          <div style="font-size:14px;font-weight:800;color:#0B2A46">{{ adminName }}</div>
+          <div style="font-size:12.5px;color:#94A3B8;margin-top:2px">admin · 강남 세곡점</div>
+        </div>
+        <button onClick="{{ onProfile }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:11px 16px;background:none;border:none;cursor:pointer;font-size:14px;font-weight:600;color:#334155;text-align:left" style-hover="background:#F6F9FC">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>내 프로필
+        </button>
+        <button onClick="{{ onSettings }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:11px 16px;background:none;border:none;cursor:pointer;font-size:14px;font-weight:600;color:#334155;text-align:left" style-hover="background:#F6F9FC">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H1a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 2.6 7a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H7a1.6 1.6 0 0 0 1-1.5V1a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V7a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z"/></svg>설정
+        </button>
+        <div style="height:1px;background:#F1F4F8;margin:4px 0"></div>
+        <button onClick="{{ onLogout }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:11px 16px;background:none;border:none;cursor:pointer;font-size:14px;font-weight:700;color:#DC2626;text-align:left" style-hover="background:#FDF2F2">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>로그아웃
+        </button>
+      </div>
+      <div style="{{ backdropStyle }}" onClick="{{ onCloseMenu }}"></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1200, &quot;height&quot;: 74 },
+  &quot;title&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;대시보드&quot;, &quot;tsType&quot;: &quot;string&quot; },
+  &quot;subtitle&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;&quot;, &quot;tsType&quot;: &quot;string&quot; }
+}">
+class Component extends DCLogic {
+  state = { menuOpen: false };
+  componentDidMount() { this.timer = setInterval(() => this.forceUpdate(), 1000); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  logout() {
+    try { localStorage.removeItem('yc_auth'); } catch (e) {}
+    window.location.href = 'Young차 로그인.dc.html';
+  }
+  renderVals() {
+    const days = ['일','월','화','수','목','금','토'];
+    const d = new Date();
+    const p = n => String(n).padStart(2, '0');
+    const dateLabel = `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} (${days[d.getDay()]}) ${p(d.getHours())}:${p(d.getMinutes())}`;
+    return {
+      title: this.props.title || '대시보드',
+      subtitle: this.props.subtitle || '',
+      dateLabel,
+      notifCount: 8,
+      adminName: '관리자',
+      onToggle: () => window.dispatchEvent(new CustomEvent('yc:sidebar-toggle')),
+      onToggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      onCloseMenu: () => this.setState({ menuOpen: false }),
+      caretStyle: `transition:transform .2s;transform:rotate(${this.state.menuOpen ? '180deg' : '0deg'})`,
+      backdropStyle: `position:fixed;inset:0;z-index:70;${this.state.menuOpen ? '' : 'display:none'}`,
+      menuStyle: `position:absolute;top:calc(100% + 12px);right:0;z-index:71;width:230px;background:#fff;border:1px solid #EEF2F7;border-radius:14px;box-shadow:0 20px 50px -16px rgba(15,40,70,.32);padding:6px 0;overflow:hidden;transform-origin:top right;transition:opacity .16s,transform .16s;opacity:${this.state.menuOpen ? '1' : '0'};transform:${this.state.menuOpen ? 'translateY(0) scale(1)' : 'translateY(-6px) scale(.97)'};pointer-events:${this.state.menuOpen ? 'auto' : 'none'}`,
+      onProfile: () => { this.setState({ menuOpen: false }); window.dispatchEvent(new CustomEvent('yc:toast', { detail: '내 프로필은 준비 중입니다' })); },
+      onSettings: () => { this.setState({ menuOpen: false }); window.dispatchEvent(new CustomEvent('yc:toast', { detail: '설정은 준비 중입니다' })); },
+      onLogout: () => this.logout(),
+    };
+  }
+}
+</script>
+</body>
+</html>

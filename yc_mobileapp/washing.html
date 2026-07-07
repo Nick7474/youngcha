@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Young차 - 세차 진행 중</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Active mode - always dark bg for visibility */
+.wash-page{background:#0A0E14;min-height:100vh;display:flex;flex-direction:column}
+.wash-page .page-wrap{background:#0A0E14}
+
+/* Status bar */
+.wash-statusbar{padding:16px 20px;display:flex;align-items:center;gap:12px;background:rgba(36,215,203,0.08);border-bottom:1px solid rgba(36,215,203,0.15)}
+.wsb-dot{width:10px;height:10px;border-radius:50%;background:var(--mint);animation:blink 1s ease infinite;flex-shrink:0}
+.wsb-text{font-size:15px;font-weight:700;color:var(--mint)}
+.wsb-right{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.6)}
+.wsb-right svg{width:16px;height:16px;stroke:rgba(255,255,255,.5);stroke-width:2;fill:none}
+
+/* Bay active indicator */
+.bay-active-bar{padding:12px 20px;display:flex;align-items:center;gap:10px}
+.bab-num{width:44px;height:44px;border-radius:var(--r-md);background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--en);font-size:22px;font-weight:800;color:#fff;box-shadow:var(--sh-mint)}
+.bab-body{flex:1}
+.bab-title{font-size:17px;font-weight:800;color:#fff}
+.bab-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:2px}
+.bab-badge{display:flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(36,215,203,.12);border-radius:var(--r-f);border:1px solid rgba(36,215,203,.25)}
+.bab-badge svg{width:14px;height:14px;stroke:var(--mint);stroke-width:2;fill:none}
+.bab-badge span{font-size:12px;font-weight:700;color:var(--mint)}
+
+/* Timer circle */
+.timer-section{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px}
+.timer-ring-wrap{position:relative;width:220px;height:220px;margin-bottom:24px}
+.timer-svg{width:220px;height:220px;transform:rotate(-90deg)}
+.timer-bg-ring{fill:none;stroke:rgba(255,255,255,.06);stroke-width:12}
+.timer-prog-ring{fill:none;stroke:url(#timerGrad);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
+.timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.timer-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1px;margin-bottom:4px;text-transform:uppercase}
+.timer-display{font-family:var(--en);font-size:52px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1;animation:neonPulse 3s ease infinite}
+.timer-sec{font-family:var(--en);font-size:22px;font-weight:600;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* Timer warning */
+.timer-display.warning{color:#FF8E53;animation:blink .8s ease infinite}
+.timer-display.critical{color:var(--red);animation:blink .5s ease infinite}
+
+/* Step chips */
+.wash-steps{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.step-chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-f);border:1.5px solid rgba(255,255,255,.1);font-size:12px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;transition:all var(--tf)}
+.step-chip.active{background:rgba(36,215,203,.12);border-color:var(--mint);color:var(--mint)}
+.step-chip svg{width:14px;height:14px;stroke-width:2;fill:none}
+
+/* Water animation */
+.water-dots{display:flex;gap:5px;justify-content:center;margin-bottom:20px}
+.wdot{width:6px;height:6px;border-radius:50%;background:var(--mint);animation:waterDrop 1.4s ease infinite}
+.wdot:nth-child(2){animation-delay:.2s}
+.wdot:nth-child(3){animation-delay:.4s}
+.wdot:nth-child(4){animation-delay:.6s}
+.wdot:nth-child(5){animation-delay:.8s}
+@keyframes waterDrop{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-8px);opacity:1}}
+
+/* Extend button */
+.extend-zone{padding:0 20px 40px}
+.extend-btn{width:100%;padding:22px 20px;border-radius:var(--r-xl);background:var(--grad);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 32px rgba(36,215,203,.42);transition:transform var(--tf);position:relative;overflow:hidden;animation:neonPulse 2.5s ease infinite}
+.extend-btn:hover{transform:scale(1.02)}
+.extend-btn:active{transform:scale(0.98)}
+.extend-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent)}
+.ext-left{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.ext-tag{font-size:10px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.5px}
+.ext-title{font-size:18px;font-weight:800;color:#fff}
+.ext-price{font-size:14px;font-weight:600;color:rgba(255,255,255,.8)}
+.ext-right{width:52px;height:52px;border-radius:var(--r-f);background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ext-right svg{width:26px;height:26px;stroke:#fff;stroke-width:2.5;fill:none}
+
+/* hidden extend button (shows when time is low) */
+.extend-zone.hidden{opacity:0;pointer-events:none}
+
+/* Info row */
+.wash-info-row{display:flex;gap:10px;padding:0 20px;margin-bottom:12px}
+.wir-card{flex:1;padding:14px;background:rgba(255,255,255,.04);border-radius:var(--r-md);border:1px solid rgba(255,255,255,.08);text-align:center}
+.wir-icon{display:flex;justify-content:center;margin-bottom:8px}
+.wir-icon svg{width:20px;height:20px;stroke:rgba(255,255,255,.4);stroke-width:1.8;fill:none}
+.wir-val{font-family:var(--en);font-size:17px;font-weight:700;color:#fff;margin-bottom:2px}
+.wir-label{font-size:11px;color:rgba(255,255,255,.3);font-weight:600}
+
+/* Exit confirm */
+.exit-modal .modal{background:#1C1F26}
+.exit-modal .modal *{color-scheme:dark}
+</style>
+</head>
+<body>
+<div class="app wash-page">
+  <div class="page-wrap">
+    <!-- Status bar -->
+    <div class="wash-statusbar a-fade-up">
+      <div class="wsb-dot"></div>
+      <div class="wsb-text">세차 진행 중</div>
+      <div class="wsb-right">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg>
+        서버 동기화됨
+      </div>
+    </div>
+
+    <!-- Bay indicator -->
+    <div class="bay-active-bar a-fade-up s1">
+      <div class="bab-num" id="bay-num-display">3</div>
+      <div class="bab-body">
+        <div class="bab-title">결제 완료! <span id="bay-active-txt">3번</span> 베이 활성화</div>
+        <div class="bab-sub" id="option-display">기본 세차 · ₩8,000</div>
+      </div>
+      <div class="bab-badge">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><circle cx="7" cy="7" r="5"/><path d="M4.5 7l2 2 3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>결제 완료</span>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-section a-fade-up s2">
+      <div class="timer-ring-wrap">
+        <svg class="timer-svg" viewBox="0 0 220 220">
+          <defs>
+            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#05B8CE"/>
+              <stop offset="100%" stop-color="#26D4A3"/>
+            </linearGradient>
+          </defs>
+          <circle class="timer-bg-ring" cx="110" cy="110" r="95"/>
+          <circle class="timer-prog-ring" id="timer-ring" cx="110" cy="110" r="95"
+            stroke-dasharray="596.9"
+            stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-center">
+          <div class="timer-label">남은 시간</div>
+          <div class="timer-display" id="timer-display">15:00</div>
+          <div class="timer-sec" id="timer-end-time">~15:32 종료 예정</div>
+        </div>
+      </div>
+
+      <!-- Step indicators -->
+      <div class="wash-steps" id="wash-steps">
+        <div class="step-chip active" id="step-1">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 2v8M4 6l3-3 3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          프리워시
+        </div>
+        <div class="step-chip" id="step-2">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M3 7c1-3 3-5 4-5s3 2 4 5" stroke-linecap="round"/></svg>
+          폼 세차
+        </div>
+        <div class="step-chip" id="step-3">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M2 9l3-5 3 3 2-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          린스
+        </div>
+      </div>
+
+      <!-- Water animation -->
+      <div class="water-dots">
+        <div class="wdot"></div><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div>
+      </div>
+
+      <!-- Info cards -->
+      <div class="wash-info-row">
+        <div class="wir-card">
+          <div class="wir-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 4V2M13 4V2M3 8h14" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wir-val" id="date-display">03/15</div>
+          <div class="wir-label">오늘 날짜</div>
+        </div>
+        <div class="wir-card">
+          <div class="wir-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><rect x="2" y="5" width="16" height="11" rx="2"/><path d="M2 9h16" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wir-val" id="price-display">₩5,600</div>
+          <div class="wir-label">결제금액</div>
+        </div>
+        <div class="wir-card">
+          <div class="wir-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M10 3C6.13 3 3 6.13 3 10s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7z"/><path d="M10 7v3l2.5 2.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="wir-val" id="extend-cnt">0회</div>
+          <div class="wir-label">연장 횟수</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extend button (initially hidden, shows near end) -->
+    <div class="extend-zone hidden" id="extend-zone">
+      <button class="extend-btn" onclick="extendTime()">
+        <div class="ext-left">
+          <div class="ext-tag">⏱ 1분 남았습니다!</div>
+          <div class="ext-title">즉시 연장하기</div>
+          <div class="ext-price">+5분 · ₩3,000 자동결제</div>
+        </div>
+        <div class="ext-right">
+          <svg viewBox="0 0 26 26" fill="none" stroke="currentColor"><path d="M13 5v8l5 3" stroke-linecap="round"/><path d="M13 21a8 8 0 100-16 8 8 0 000 16z"/></svg>
+        </div>
+      </button>
+    </div>
+
+    <!-- Spacer for normal state -->
+    <div id="normal-extend" style="padding:0 20px;margin-bottom:40px">
+      <button class="btn btn-ghost btn-full" style="color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.1)" onclick="extendTime()">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M10 4v6l4 2" stroke-linecap="round"/><circle cx="10" cy="10" r="7"/></svg>
+        시간 미리 연장하기 (+5분 ₩3,000)
+      </button>
+    </div>
+  </div>
+
+  <!-- GNB -->
+  <nav class="gnb" style="background:rgba(28,31,38,.95);border-top:1px solid rgba(255,255,255,.06)">
+    <a class="gnb-item" href="home.html" style="color:rgba(255,255,255,.3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="color:rgba(255,255,255,.3)">홈</span>
+    </a>
+    <a class="gnb-item active" href="washing.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg>
+      <span>세차중</span>
+    </a>
+    <a class="gnb-item" href="history.html" style="color:rgba(255,255,255,.3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 4V2M16 4V2M3 9h18M8 14h2M12 14h4M8 18h2" stroke-linecap="round"/></svg>
+      <span style="color:rgba(255,255,255,.3)">세차내역</span>
+    </a>
+    <a class="gnb-item" href="mypage.html" style="color:rgba(255,255,255,.3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke-linecap="round"/></svg>
+      <span style="color:rgba(255,255,255,.3)">마이페이지</span>
+    </a>
+  </nav>
+
+  <!-- Complete Modal -->
+  <div class="modal-overlay" id="complete-modal">
+    <div class="modal" style="background:#1C1F26;text-align:center">
+      <div style="width:72px;height:72px;border-radius:var(--r-lg);background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:neonPulse 2s ease infinite">
+        <svg viewBox="0 0 36 36" fill="none" stroke="var(--mint)" style="width:36px;height:36px;stroke-width:2"><circle cx="18" cy="18" r="15"/><path d="M11 18l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px">세차 완료! 🎉</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:24px">깨끗하게 세차 완료되었습니다.<br>다음에 또 이용해주세요!</div>
+      <div style="padding:14px;background:rgba(36,215,203,.08);border-radius:var(--r-md);border:1px solid rgba(36,215,203,.2);margin-bottom:20px">
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:6px">총 세차 시간</div>
+        <div style="font-family:var(--en);font-size:28px;font-weight:800;color:var(--mint)" id="total-time">15:00</div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="goHistory()">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 4V2M13 4V2M3 8h14M8 12h2M12 12h2" stroke-linecap="round"/></svg>
+        영수증 보기
+      </button>
+      <button class="btn btn-ghost btn-full mt-8" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.1)" onclick="window.location.href='home.html'">홈으로</button>
+    </div>
+  </div>
+
+  <div class="toast-wrap"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// Load from storage
+const bay = localStorage.getItem('yc-bay') || '3';
+const option = localStorage.getItem('yc-option') || '기본 세차';
+const price = parseInt(localStorage.getItem('yc-price') || '8000');
+const disc = Math.floor(price*0.3);
+const final = price-disc;
+
+document.getElementById('bay-num-display').textContent = bay;
+document.getElementById('bay-active-txt').textContent = bay+'번';
+document.getElementById('option-display').textContent = option+' · ₩'+price.toLocaleString();
+document.getElementById('price-display').textContent = '₩'+final.toLocaleString();
+
+// Date
+const now = new Date();
+document.getElementById('date-display').textContent = 
+  (now.getMonth()+1).toString().padStart(2,'0')+'/'+(now.getDate()).toString().padStart(2,'0');
+const endTime = new Date(now.getTime()+15*60*1000);
+document.getElementById('timer-end-time').textContent = 
+  '~'+endTime.getHours().toString().padStart(2,'0')+':'+endTime.getMinutes().toString().padStart(2,'0')+' 종료 예정';
+
+// Timer
+let totalSec = 15*60;
+let elapsed = 0;
+let extendCount = 0;
+const ringCircumference = 2*Math.PI*95; // ~596.9
+const ring = document.getElementById('timer-ring');
+const display = document.getElementById('timer-display');
+ring.style.strokeDasharray = ringCircumference;
+
+function updateTimer(){
+  if(totalSec<=0){
+    clearInterval(timerInterval);
+    Modal.open('complete-modal');
+    document.getElementById('total-time').textContent = formatTime(elapsed);
+    return;
+  }
+  totalSec--;
+  elapsed++;
+  
+  const mins = Math.floor(totalSec/60);
+  const secs = totalSec%60;
+  display.textContent = mins.toString().padStart(2,'0')+':'+secs.toString().padStart(2,'0');
+  
+  // Progress ring
+  const progress = totalSec/(15*60);
+  ring.style.strokeDashoffset = ringCircumference*(1-progress);
+  
+  // Color warnings
+  display.classList.remove('warning','critical');
+  if(totalSec<=60 && totalSec>30){
+    display.classList.add('warning');
+    showExtendBanner();
+  } else if(totalSec<=30){
+    display.classList.add('critical');
+  }
+  
+  // Step simulation
+  if(elapsed>300) activateStep('step-2');
+  if(elapsed>600) activateStep('step-3');
+}
+
+function activateStep(id){
+  document.querySelectorAll('.step-chip').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+}
+
+function showExtendBanner(){
+  document.getElementById('extend-zone').classList.remove('hidden');
+  document.getElementById('normal-extend').style.display='none';
+  if('vibrate' in navigator) navigator.vibrate([200,100,200]);
+}
+
+function extendTime(){
+  totalSec += 5*60;
+  extendCount++;
+  document.getElementById('extend-cnt').textContent = extendCount+'회';
+  document.getElementById('extend-zone').classList.add('hidden');
+  document.getElementById('normal-extend').style.display='block';
+  display.classList.remove('warning','critical');
+  ring.style.stroke='url(#timerGrad)';
+  Toast.show('⏱ 5분 연장되었습니다! ₩3,000 결제 완료');
+}
+
+function formatTime(sec){
+  return Math.floor(sec/60).toString().padStart(2,'0')+':'+( sec%60).toString().padStart(2,'0');
+}
+
+function goHistory(){
+  Modal.close('complete-modal');
+  window.location.href='history.html';
+}
+
+const timerInterval = setInterval(updateTimer,1000);
+</script>
+</body>
+</html>

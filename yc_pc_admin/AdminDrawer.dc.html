@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="{{ layerStyle }}">
+  <div onClick="{{ onClose }}" style="{{ scrimStyle }}"></div>
+  <aside style="{{ panelStyle }}">
+    <!-- header -->
+    <div style="flex:0 0 auto;padding:20px 22px 16px;border-bottom:1px solid #F1F4F8">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#94A3B8"><span style="width:6px;height:6px;border-radius:50%;background:#24D7CB"></span>{{ eyebrow }}</div>
+        <button onClick="{{ onClose }}" style="background:none;border:none;cursor:pointer;color:#94A3B8;display:flex;padding:2px;margin:-2px" style-hover="color:#334155"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <sc-if value="{{ avatarIsText }}" hint-placeholder-val="{{ true }}">
+          <div style="width:54px;height:54px;border:2px solid #24D7CB;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;color:#0B2A46;flex:0 0 auto">{{ avatarText }}</div>
+        </sc-if>
+        <sc-if value="{{ avatarIsIcon }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ avatarIconWrap }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ avatarPathD }}"></path></svg></div>
+        </sc-if>
+        <div style="min-width:0">
+          <div style="font-size:19px;font-weight:800;color:#0B2A46;line-height:1.2">{{ title }}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+            <span style="{{ badgeStyle }}">{{ badgeText }}</span>
+            <span style="font-size:13px;color:#64748B;font-weight:500">{{ subtitle }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- body -->
+    <div data-noscroll style="flex:1;overflow-y:auto;padding:20px 22px">
+      <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="3">
+        <div style="margin-bottom:22px">
+          <sc-if value="{{ b.hasHeading }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#0B2A46;margin-bottom:11px"><span style="width:4px;height:14px;border-radius:2px;background:#24D7CB"></span>{{ b.heading }}</div>
+          </sc-if>
+
+          <sc-if value="{{ b.isRows }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13.5px"><span style="color:#64748B;white-space:nowrap">{{ it.label }}</span><span style="{{ it.valStyle }}">{{ it.value }}</span></div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.isCards }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ b.gridStyle }}">
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="2">
+                <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:12px 13px">
+                  <div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:4px">{{ it.top }}</div>
+                  <div style="{{ it.midStyle }}">{{ it.mid }}</div>
+                  <sc-if value="{{ it.hasBottom }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#64748B;margin-top:2px">{{ it.bottom }}</div></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.isProgress }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="2">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">{{ it.label }}</span><span style="font-weight:800;color:#0B2A46">{{ it.value }}</span></div>
+                  <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="{{ it.barStyle }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.isTimeline }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+                <div style="display:flex;gap:12px">
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:0 0 auto">
+                    <span style="{{ it.dotStyle }}"></span>
+                    <span style="{{ it.lineStyle }}"></span>
+                  </div>
+                  <div style="padding-bottom:16px">
+                    <div style="{{ it.titleStyle }}">{{ it.title }}</div>
+                    <div style="font-size:12px;color:#94A3B8;margin-top:2px;font-variant-numeric:tabular-nums">{{ it.time }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.isNote }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ b.noteStyle }}">{{ b.text }}</div>
+          </sc-if>
+
+          <sc-if value="{{ b.isQr }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:16px;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:14px 16px">
+              <svg width="72" height="72" viewBox="0 0 29 29" shape-rendering="crispEdges" style="flex:0 0 auto"><rect width="29" height="29" fill="#fff"/><g fill="#0B2A46"><rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/><rect x="22" y="0" width="7" height="7"/><rect x="23" y="1" width="5" height="5" fill="#fff"/><rect x="24" y="2" width="3" height="3"/><rect x="0" y="22" width="7" height="7"/><rect x="1" y="23" width="5" height="5" fill="#fff"/><rect x="2" y="24" width="3" height="3"/><rect x="9" y="2" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="9" y="9" width="2" height="2"/><rect x="15" y="9" width="1" height="1"/><rect x="18" y="10" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="13" y="13" width="2" height="2"/><rect x="16" y="16" width="1" height="1"/><rect x="20" y="14" width="1" height="1"/><rect x="22" y="12" width="1" height="1"/><rect x="24" y="16" width="1" height="1"/><rect x="9" y="18" width="1" height="1"/><rect x="12" y="20" width="2" height="2"/><rect x="15" y="22" width="1" height="1"/><rect x="18" y="20" width="1" height="1"/><rect x="20" y="22" width="1" height="1"/><rect x="23" y="24" width="1" height="1"/></g></svg>
+              <div>
+                <div style="font-size:14px;font-weight:800;color:#0B2A46;margin-bottom:4px">{{ b.qrTitle }}</div>
+                <div style="font-size:12.5px;color:#64748B;margin-bottom:8px">{{ b.qrSub }}</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:#0FA588;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#20C79E"></span>{{ b.qrStatus }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.isCam }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(160deg,#1E3040,#0C1922)">
+              <div style="position:absolute;left:8%;right:8%;bottom:0;height:58%;background:rgba(255,255,255,.06);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%)"></div>
+              <span style="position:absolute;left:50%;top:46%;transform:translateX(-50%);color:#7FE9DC"><svg width="96" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+              <div style="position:absolute;left:34%;top:40%;width:32%;height:40%;border:2px solid #24D7CB;border-radius:4px"><span style="position:absolute;top:-22px;left:-2px;background:#24D7CB;color:#04322F;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:5px;white-space:nowrap">{{ b.camTag }}</span></div>
+              <div style="position:absolute;top:10px;left:12px;display:flex;align-items:center;gap:6px;color:#9FE9E1;font-size:11px;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#20E3B2;box-shadow:0 0 8px #20E3B2;animation:livedot 1.2s ease-in-out infinite"></span>LIVE</div>
+              <div style="position:absolute;bottom:10px;left:12px;color:rgba(255,255,255,.7);font-size:11px;font-weight:700">{{ b.camLabel }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- footer -->
+    <sc-if value="{{ hasActions }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:0 0 auto;padding:16px 22px;border-top:1px solid #F1F4F8;display:flex;flex-wrap:wrap;gap:10px">
+        <sc-for list="{{ actions }}" as="a" hint-placeholder-count="2">
+          <button onClick="{{ a.onClick }}" style="{{ a.style }}">{{ a.text }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 460, &quot;height&quot;: 800 },
+  &quot;open&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot; }
+}">
+class Component extends DCLogic {
+  COL = { default:'#334155', strong:'#0B2A46', muted:'#64748B', accent:'#05B8CE', danger:'#DC2626', good:'#0FA588', warn:'#D97706', blue:'#2563EB', violet:'#8B5CF6' };
+  col(k) { return this.COL[k] || this.COL.default; }
+
+  prepBlock(b) {
+    const type = b.type;
+    const out = { hasHeading: !!b.heading, heading: b.heading || '', isRows:false, isCards:false, isProgress:false, isTimeline:false, isNote:false, isQr:false, isCam:false };
+    if (type === 'rows') {
+      out.isRows = true;
+      out.items = (b.items || []).map(it => ({ label: it.label, value: it.value, valStyle: `font-weight:${it.strong ? 800 : 700};color:${this.col(it.color || 'strong')};text-align:right;font-variant-numeric:tabular-nums` }));
+    } else if (type === 'cards') {
+      out.isCards = true;
+      out.gridStyle = `display:grid;grid-template-columns:repeat(${b.cols || 2},1fr);gap:10px`;
+      out.items = (b.items || []).map(it => ({ top: it.top, mid: it.mid, hasBottom: it.bottom != null, bottom: it.bottom, midStyle: `font-size:15px;font-weight:800;color:${this.col(it.color || 'strong')}` }));
+    } else if (type === 'progress') {
+      out.isProgress = true;
+      out.items = (b.items || []).map(it => ({ label: it.label, value: it.value, barStyle: `width:${Math.max(0, Math.min(100, it.pct))}%;height:100%;border-radius:4px;background:${it.color === 'blue' ? '#3B82F6' : 'linear-gradient(90deg,#24D7CB,#05B8CE)'};transition:width .6s ease` }));
+    } else if (type === 'timeline') {
+      out.isTimeline = true;
+      const items = b.items || [];
+      out.items = items.map((it, i) => {
+        const done = it.done !== false;
+        const c = it.tone ? this.col(it.tone) : (done ? '#05B8CE' : '#CBD5E1');
+        return { title: it.title, time: it.time || '', titleStyle: `font-size:13.5px;font-weight:${done ? 700 : 600};color:${done ? '#0B2A46' : '#94A3B8'}`, dotStyle: `width:12px;height:12px;border-radius:50%;flex:0 0 auto;background:${done ? c : '#fff'};border:2px solid ${c}`, lineStyle: `width:2px;flex:1;min-height:14px;background:${i === items.length - 1 ? 'transparent' : '#E7ECF2'}` };
+      });
+    } else if (type === 'note') {
+      out.isNote = true; out.text = b.text;
+      const tone = { good:{bg:'#E4FAF3',bd:'#C6EDE0',fg:'#0FA588'}, warn:{bg:'#FEF6E9',bd:'#FADFB4',fg:'#D97706'}, danger:{bg:'#FDECEC',bd:'#F7CFCF',fg:'#DC2626'}, info:{bg:'#E6FAFB',bd:'#C7EEF3',fg:'#0398AB'} }[b.tone || 'info'];
+      out.noteStyle = `font-size:13.5px;font-weight:600;line-height:1.55;padding:13px 15px;border-radius:12px;background:${tone.bg};border:1px solid ${tone.bd};color:${tone.fg}`;
+    } else if (type === 'qr') {
+      out.isQr = true; out.qrTitle = b.title || 'QR·NFC 연결'; out.qrSub = b.sub || ''; out.qrStatus = b.status || '연결됨';
+    } else if (type === 'cam') {
+      out.isCam = true; out.camTag = b.tag || ''; out.camLabel = b.label || '';
+    }
+    return out;
+  }
+
+  actionStyle(kind) {
+    const base = 'flex:1;min-width:120px;height:46px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;';
+    const map = {
+      primary: 'border:none;background:linear-gradient(135deg,#24D7CB,#05B8CE);color:#fff;',
+      danger: 'border:none;background:#EF4444;color:#fff;',
+      warn: 'border:1.5px solid #FADFB4;background:#FEF6E9;color:#D97706;',
+      blue: 'border:1.5px solid #D3E1FD;background:#EEF4FF;color:#2563EB;',
+      ghost: 'border:1.5px solid #E1E7EF;background:#fff;color:#475569;',
+    };
+    return base + (map[kind] || map.ghost);
+  }
+
+  renderVals() {
+    const p = this.props, open = !!p.open;
+    const blocks = (p.blocks || []).map(b => this.prepBlock(b));
+    const actions = (p.actions || []).map(a => ({ text: a.text, onClick: a.onClick || (() => {}), style: this.actionStyle(a.kind) }));
+    const badge = p.badge || { text: '', bg: '#EFF2F6', fg: '#64748B' };
+    const avatarIsText = p.avatarText != null && p.avatarText !== '';
+    return {
+      layerStyle: `position:fixed;inset:0;z-index:88;pointer-events:${open ? 'auto' : 'none'}`,
+      scrimStyle: `position:absolute;inset:0;background:rgba(11,42,70,.34);backdrop-filter:blur(1.5px);opacity:${open ? 1 : 0};transition:opacity .3s ease`,
+      panelStyle: `position:absolute;top:0;right:0;height:100%;width:440px;max-width:92vw;background:#fff;box-shadow:-24px 0 70px -24px rgba(11,42,70,.4);display:flex;flex-direction:column;transform:translateX(${open ? '0' : '100%'});transition:transform .34s cubic-bezier(.4,0,.2,1)`,
+      eyebrow: p.eyebrow || '상세 정보',
+      onClose: p.onClose || (() => {}),
+      avatarIsText, avatarIsIcon: !avatarIsText,
+      avatarText: p.avatarText || '',
+      avatarPathD: p.avatarPathD || 'M12 8v4l3 2',
+      avatarIconWrap: `width:54px;height:54px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,${p.avatarBg1 || '#24D7CB'},${p.avatarBg2 || '#05B8CE'})`,
+      title: p.title || '',
+      subtitle: p.subtitle || '',
+      badgeText: badge.text,
+      badgeStyle: `display:inline-flex;font-size:12px;font-weight:800;padding:3px 10px;border-radius:8px;background:${badge.bg};color:${badge.fg};white-space:nowrap`,
+      blocks,
+      hasActions: actions.length > 0,
+      actions,
+    };
+  }
+}
+</script>
+</body>
+</html>

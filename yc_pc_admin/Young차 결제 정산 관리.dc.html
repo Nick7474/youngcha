@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#F4F6F9}
+  a{color:#05B8CE;text-decoration:none}
+  a:hover{color:#0398AB}
+  [data-noscroll]{scrollbar-width:thin;scrollbar-color:#D5DCE5 transparent}
+  [data-noscroll]::-webkit-scrollbar{width:8px;height:8px}
+  [data-noscroll]::-webkit-scrollbar-thumb{background:#D5DCE5;border-radius:4px}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.3}}
+  input:focus,select:focus{outline:none}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
+  <div style="{{ sidebarWrapStyle }}">
+    <dc-import name="AdminSidebar" active="pay" collapsed="{{ collapsed }}" style="width:100%;height:100%" hint-size="240px,100%"></dc-import>
+  </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <dc-import name="AdminTopbar" title="결제·정산 관리" style="display:block;width:100%" hint-size="100%,74px"></dc-import>
+    <div data-noscroll style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- KPI ROW -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px"><span style="width:36px;height:36px;border-radius:11px;background:#E6FAFB;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#05B8CE" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span><span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">오늘 결제 금액</span></div>
+          <div style="font-size:24px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">1,248,000<span style="font-size:15px">원</span></div>
+          <div style="font-size:12.5px;color:#12B886;font-weight:700;margin-top:5px">40건 결제 완료</div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px"><span style="width:36px;height:36px;border-radius:11px;background:#E4FAF3;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0FA588" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.4 2.4 4.6-5"/></svg></span><span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">정산 예정액</span></div>
+          <div style="font-size:24px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">1,210,560<span style="font-size:15px">원</span></div>
+          <div style="font-size:12.5px;color:#94A3B8;font-weight:500;margin-top:5px">수수료 3% 차감 후</div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px"><span style="width:36px;height:36px;border-radius:11px;background:#FDECEC;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-7 3.3"/><path d="M3 4v4h4"/></svg></span><span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">환불 금액</span></div>
+          <div style="font-size:24px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">38,000<span style="font-size:15px">원</span></div>
+          <div style="font-size:12.5px;color:#EF4444;font-weight:700;margin-top:5px">2건 환불 처리</div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px"><span style="width:36px;height:36px;border-radius:11px;background:#FEF3E2;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></span><span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">결제 대기·실패</span></div>
+          <div style="font-size:24px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">1<span style="font-size:15px;color:#94A3B8">건</span></div>
+          <div style="font-size:12.5px;color:#F59E0B;font-weight:700;margin-top:5px">확인 필요</div>
+        </div>
+      </div>
+
+      <!-- MID: settlement panel + method breakdown -->
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start">
+        <!-- next settlement -->
+        <div style="border-radius:16px;padding:22px 24px;background:linear-gradient(130deg,#0B2447 0%,#0F5E70 70%,#12A79A 130%);color:#fff;box-shadow:0 16px 38px -18px rgba(11,42,70,.6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px">
+          <div>
+            <div style="font-size:13.5px;opacity:.82;font-weight:600;margin-bottom:8px">다음 정산 예정</div>
+            <div style="font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:6px">1,210,560원</div>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;opacity:.88">
+              <span style="display:flex;align-items:center;gap:5px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>2025.06.21 (토) 입금 예정</span>
+              <span style="display:flex;align-items:center;gap:5px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg>국민은행 ***-**-**8842</span>
+            </div>
+          </div>
+          <button onClick="{{ onSettleNow }}" style="display:flex;align-items:center;gap:7px;background:#fff;border:none;color:#0B2A46;padding:14px 22px;border-radius:13px;font-size:15px;font-weight:800;cursor:pointer;white-space:nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14M6 10l6 6 6-6"/><path d="M4 20h16"/></svg>즉시 정산 신청</button>
+        </div>
+        <!-- payment methods -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+          <div style="font-size:15.5px;font-weight:800;color:#0B2A46;margin-bottom:16px">결제 수단 비중</div>
+          <div style="display:flex;flex-direction:column;gap:15px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">간편결제 (앱)</span><span style="font-weight:800;color:#0B2A46">62%</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="width:62%;height:100%;border-radius:4px;background:linear-gradient(90deg,#24D7CB,#05B8CE)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">신용카드</span><span style="font-weight:800;color:#0B2A46">28%</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="width:28%;height:100%;border-radius:4px;background:#3B82F6"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">현장 계좌이체</span><span style="font-weight:800;color:#0B2A46">10%</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="width:10%;height:100%;border-radius:4px;background:#8B5CF6"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS TABLE -->
+      <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:17px;font-weight:800;color:#0B2A46">거래 내역</span>
+            <span style="font-size:12.5px;color:#94A3B8;font-weight:500">{{ countLabel }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+            <div style="display:flex;background:#F1F4F8;border-radius:10px;padding:3px">
+              <button onClick="{{ onTabAll }}" style="{{ tabAllStyle }}">전체</button>
+              <button onClick="{{ onTabPaid }}" style="{{ tabPaidStyle }}">완료</button>
+              <button onClick="{{ onTabRefund }}" style="{{ tabRefundStyle }}">환불</button>
+              <button onClick="{{ onTabFail }}" style="{{ tabFailStyle }}">실패</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;background:#F1F4F8;border:1px solid #E7ECF2;border-radius:10px;padding:9px 12px;width:230px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+              <input type="text" placeholder="주문번호, 고객명, 차량번호" value="{{ query }}" onInput="{{ onQuery }}" style="border:none;background:none;font-size:13px;color:#334155;width:100%;font-family:inherit">
+            </div>
+            <button onClick="{{ onExport }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E7ECF2;border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;color:#475569;cursor:pointer;white-space:nowrap" style-hover="color:#05B8CE"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M4 21h16"/></svg>내보내기</button>
+          </div>
+        </div>
+        <div data-noscroll style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;min-width:900px">
+            <thead>
+              <tr style="border-bottom:1.5px solid #EEF2F7">
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">주문번호</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">시간</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">고객 / 차량</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">서비스</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">결제수단</th>
+                <th style="text-align:right;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">금액</th>
+                <th style="text-align:center;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">상태</th>
+                <th style="text-align:right;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px;white-space:nowrap">작업</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                <tr onClick="{{ r.onDetail }}" style="{{ r.rowStyle }}">
+                  <td style="padding:13px 12px;font-size:13px;font-weight:700;color:#0B2A46;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.oid }}</td>
+                  <td style="padding:13px 12px;font-size:13px;color:#64748B;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.time }}</td>
+                  <td style="padding:13px 12px;white-space:nowrap"><div style="font-size:14px;color:#334155;font-weight:600">{{ r.cust }}</div><div style="font-size:12px;color:#94A3B8;margin-top:1px">{{ r.plate }}</div></td>
+                  <td style="padding:13px 12px;font-size:14px;color:#475569;white-space:nowrap">{{ r.service }}</td>
+                  <td style="padding:13px 12px;font-size:13.5px;color:#475569;white-space:nowrap">{{ r.method }}</td>
+                  <td style="padding:13px 12px;font-size:14px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;{{ r.amtColor }}">{{ r.amount }}</td>
+                  <td style="padding:13px 12px;text-align:center"><span style="{{ r.statusStyle }}">{{ r.statusText }}</span></td>
+                  <td onClick="{{ r.stop }}" style="padding:10px 12px;text-align:right">
+                    <sc-if value="{{ r.canRefund }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onRefund }}" style="background:#FFF3F3;border:1px solid #FBD5D5;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:700;color:#DC2626;cursor:pointer;white-space:nowrap">환불</button></sc-if>
+                    <sc-if value="{{ r.canRetry }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onRetry }}" style="background:#FEF6E9;border:1px solid #FADFB4;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:700;color:#D97706;cursor:pointer;white-space:nowrap">재요청</button></sc-if>
+                    <sc-if value="{{ r.noAction }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:#CBD5E1">-</span></sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REFUND CONFIRM MODAL -->
+  <sc-if value="{{ refundOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onCancelRefund }}" style="position:fixed;inset:0;background:rgba(11,42,70,.42);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:90;padding:20px">
+      <div onClick="{{ stop }}" style="width:400px;max-width:100%;background:#fff;border-radius:20px;box-shadow:0 30px 70px -20px rgba(11,42,70,.5);padding:26px">
+        <div style="width:52px;height:52px;border-radius:14px;background:#FDECEC;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-7 3.3"/><path d="M3 4v4h4"/></svg></div>
+        <div style="font-size:19px;font-weight:800;color:#0B2A46;margin-bottom:8px">환불을 진행할까요?</div>
+        <p style="font-size:14px;color:#64748B;line-height:1.6;margin-bottom:18px">{{ refundMsg }}</p>
+        <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:14px 16px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13.5px;color:#64748B">환불 금액</span><span style="font-size:18px;font-weight:800;color:#EF4444">{{ refundAmt }}</span></div>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ onCancelRefund }}" style="flex:1;height:48px;border-radius:13px;border:1.5px solid #E1E7EF;background:#fff;color:#64748B;font-size:15px;font-weight:700;cursor:pointer">취소</button>
+          <button onClick="{{ onConfirmRefund }}" style="flex:1.4;height:48px;border-radius:13px;border:none;background:#EF4444;color:#fff;font-size:15px;font-weight:800;cursor:pointer">환불 처리</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <dc-import name="AdminDrawer" open="{{ drawerOpen }}" eyebrow="거래 상세" title="{{ dTitle }}" subtitle="{{ dSubtitle }}" avatar-path-d="{{ dAvatarPath }}" avatar-bg1="{{ dBg1 }}" avatar-bg2="{{ dBg2 }}" badge="{{ dBadge }}" blocks="{{ dBlocks }}" actions="{{ dActions }}" on-close="{{ onCloseDrawer }}" style="position:fixed;left:0;top:0;width:0;height:0;z-index:88" hint-size="0px,0px"></dc-import>
+  <div style="{{ toastStyle }}">{{ toast }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
+}">
+class Component extends DCLogic {
+  state = { collapsed: false, tab: 'all', query: '', toast: '', refundOpen: false, refundId: null, override: {}, drawerOpen: false, selId: null };
+  TX = [
+    { oid:'YC-240620-041', time:'14:33', cust:'최지원', plate:'23가 8901', service:'기본 세차', method:'간편결제', amount:20000, status:'paid' },
+    { oid:'YC-240620-040', time:'14:21', cust:'정우성', plate:'88바 1234', service:'프리미엄 세차', method:'간편결제', amount:38000, status:'paid' },
+    { oid:'YC-240620-039', time:'14:08', cust:'김영수', plate:'12가 3456', service:'프리미엄 세차', method:'신용카드', amount:38000, status:'paid' },
+    { oid:'YC-240620-038', time:'13:52', cust:'박서연', plate:'45다 2211', service:'실내 세차', method:'간편결제', amount:30000, status:'refunded' },
+    { oid:'YC-240620-037', time:'13:40', cust:'이준호', plate:'67라 9988', service:'기본 세차 (심야 -25%)', method:'간편결제', amount:15000, status:'paid' },
+    { oid:'YC-240620-036', time:'13:22', cust:'한지민', plate:'22바 5344', service:'타이어 광택', method:'현장 계좌이체', amount:15000, status:'paid' },
+    { oid:'YC-240620-035', time:'13:05', cust:'오세훈', plate:'11마 3030', service:'프리미엄 세차', method:'신용카드', amount:38000, status:'failed' },
+    { oid:'YC-240620-034', time:'12:47', cust:'강다니엘', plate:'99자 7777', service:'기본 세차', method:'간편결제', amount:20000, status:'paid' },
+    { oid:'YC-240620-033', time:'12:30', cust:'신유진', plate:'33차 1414', service:'실내 세차', method:'간편결제', amount:30000, status:'refunded' },
+    { oid:'YC-240620-032', time:'12:12', cust:'문상철', plate:'55카 6262', service:'프리미엄 세차', method:'신용카드', amount:38000, status:'paid' },
+  ];
+
+  componentDidMount() {
+    try { this.setState({ collapsed: localStorage.getItem('yc_sidebar_collapsed') === '1' }); } catch (e) {}
+    this._onToggle = () => this.setState(s => { const v = !s.collapsed; try { localStorage.setItem('yc_sidebar_collapsed', v ? '1' : '0'); } catch (e) {} return { collapsed: v }; });
+    window.addEventListener('yc:sidebar-toggle', this._onToggle);
+  }
+  componentWillUnmount() { clearTimeout(this._tt); window.removeEventListener('yc:sidebar-toggle', this._onToggle); }
+
+  flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  statusOf(t) { return this.state.override[t.oid] || t.status; }
+  meta(st) {
+    const m = {
+      paid: { bg:'#E4FAF3', fg:'#0FA588', text:'결제 완료' },
+      refunded: { bg:'#FDECEC', fg:'#DC2626', text:'환불 완료' },
+      failed: { bg:'#FEF3E2', fg:'#D97706', text:'결제 실패' },
+    };
+    return m[st] || m.paid;
+  }
+  tabStyle(k) {
+    const on = this.state.tab === k;
+    return `border:none;border-radius:8px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;${on ? 'background:#fff;color:#0B2A46;box-shadow:0 1px 4px rgba(15,40,70,.1)' : 'background:transparent;color:#94A3B8'}`;
+  }
+
+  buildDrawer(id) {
+    const t = id ? this.TX.find(x => x.oid === id) : null;
+    if (!t) return { title:'', subtitle:'', badge:{text:'',bg:'#EFF2F6',fg:'#64748B'}, blocks:[], actions:[], path:'M3 10h18', bg1:'#94A3B8', bg2:'#64748B' };
+    const st = this.statusOf(t), m = this.meta(st);
+    const discounted = /-\d+%/.test(t.service);
+    const orig = discounted ? Math.round(t.amount / 0.75) : t.amount;
+    const disc = orig - t.amount;
+    const blocks = [];
+    blocks.push({ type:'cards', cols:2, items:[
+      { top:'고객', mid:t.cust, bottom:'일반 회원' },
+      { top:'차량', mid:t.plate, bottom:t.service.replace(/\s*\(.*\)/, '') },
+    ]});
+    blocks.push({ type:'rows', heading:'결제 정보', items:[
+      { label:'서비스', value:t.service },
+      { label:'결제수단', value:t.method },
+      { label:'승인번호', value:'APP' + t.oid.replace(/\D/g, '').slice(-8) },
+      { label:'주문시각', value:'2025.06.20 ' + t.time },
+    ]});
+    const amtItems = [{ label:'상품 금액', value:orig.toLocaleString() + '원', color:'default' }];
+    if (disc > 0) amtItems.push({ label:'타임세일 할인', value:'-' + disc.toLocaleString() + '원', color:'good' });
+    amtItems.push({ label: st === 'refunded' ? '환불 금액' : '결제 금액', value:(st === 'refunded' ? '-' : '') + t.amount.toLocaleString() + '원', color: st === 'refunded' ? 'danger' : 'accent', strong:true });
+    blocks.push({ type:'rows', heading:'금액 상세', items: amtItems });
+    const tl = [
+      { title:'결제 요청', time:'2025.06.20 ' + t.time + ':02', done:true },
+      { title: st === 'failed' ? '승인 실패' : '승인 완료', time:'2025.06.20 ' + t.time + ':04', done: st !== 'failed', tone: st === 'failed' ? 'danger' : null },
+    ];
+    if (st === 'refunded') tl.push({ title:'환불 완료', time:'2025.06.20 ' + t.time + ':40', done:true, tone:'danger' });
+    else if (st === 'paid') tl.push({ title:'정산 예정', time:'2025.06.21 예정', done:false });
+    blocks.push({ type:'timeline', heading:'처리 상태', items: tl });
+    const actions = [{ text:'영수증 보기', kind:'ghost', onClick:() => this.flash(t.oid + ' 영수증을 발송했습니다') }];
+    if (st === 'paid') actions.push({ text:'환불 처리', kind:'danger', onClick:() => this.setState({ refundOpen:true, refundId:t.oid }) });
+    if (st === 'failed') actions.push({ text:'결제 재요청', kind:'warn', onClick:() => this.flash(t.oid + ' 결제 재요청을 발송했습니다') });
+    return { title:t.oid, subtitle:t.time + ' · ' + t.method, badge:{ text:m.text, bg:m.bg, fg:m.fg }, blocks, actions, path:'M3 10h18M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z', bg1:'#24D7CB', bg2:'#05B8CE' };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const q = s.query.replace(/\s/g, '');
+    const rows = this.TX.map(t => {
+      const st = this.statusOf(t), m = this.meta(st);
+      const refunded = st === 'refunded', failed = st === 'failed';
+      return {
+        _st: st, oid: t.oid, time: t.time, cust: t.cust, plate: t.plate, service: t.service, method: t.method,
+        amount: (refunded ? '-' : '') + t.amount.toLocaleString() + '원',
+        amtColor: refunded ? 'color:#DC2626' : 'color:#0B2A46',
+        statusStyle: `display:inline-flex;font-size:12.5px;font-weight:700;padding:4px 11px;border-radius:8px;background:${m.bg};color:${m.fg}`,
+        statusText: m.text,
+        canRefund: st === 'paid', canRetry: failed, noAction: refunded,
+        rowStyle: `border-bottom:1px solid #F3F6F9;cursor:pointer;transition:background .12s;${s.selId === t.oid && s.drawerOpen ? 'background:#F3FCFB' : ''}`,
+        stop: e => e.stopPropagation(),
+        onDetail: () => this.setState({ selId: t.oid, drawerOpen: true }),
+        onRefund: () => this.setState({ refundOpen: true, refundId: t.oid }),
+        onRetry: () => this.flash(`${t.oid} 결제 재요청을 발송했습니다`),
+      };
+    }).filter(r => (s.tab === 'all' || r._st === (s.tab === 'paid' ? 'paid' : s.tab === 'refund' ? 'refunded' : 'failed'))
+      && (q === '' || r.oid.replace(/\s/g, '').toLowerCase().includes(q.toLowerCase()) || r.cust.includes(s.query) || r.plate.replace(/\s/g, '').includes(q)));
+
+    const rt = s.refundId ? this.TX.find(t => t.oid === s.refundId) : null;
+    const dd = this.buildDrawer(s.selId);
+
+    return {
+      collapsed: s.collapsed,
+      sidebarWrapStyle: `flex:0 0 ${s.collapsed ? 74 : 240}px;height:100%;position:relative;z-index:30;transition:flex-basis .25s ease`,
+      onSettleNow: () => this.flash('즉시 정산을 신청했습니다 · 영업일 기준 1일 내 입금'),
+      countLabel: `총 ${rows.length}건`,
+      tabAllStyle: this.tabStyle('all'), tabPaidStyle: this.tabStyle('paid'), tabRefundStyle: this.tabStyle('refund'), tabFailStyle: this.tabStyle('fail'),
+      onTabAll: () => this.setState({ tab: 'all' }), onTabPaid: () => this.setState({ tab: 'paid' }), onTabRefund: () => this.setState({ tab: 'refund' }), onTabFail: () => this.setState({ tab: 'fail' }),
+      query: s.query, onQuery: e => this.setState({ query: e.target.value }),
+      onExport: () => this.flash('거래 내역을 CSV로 내보냈습니다'),
+      rows,
+      refundOpen: s.refundOpen,
+      refundMsg: rt ? `${rt.oid} · ${rt.cust} 고객의 ${rt.service} 결제를 환불합니다. 환불 후에는 취소할 수 없습니다.` : '',
+      refundAmt: rt ? rt.amount.toLocaleString() + '원' : '',
+      stop: e => e.stopPropagation(),
+      onCancelRefund: () => this.setState({ refundOpen: false, refundId: null }),
+      onConfirmRefund: () => { const id = s.refundId; this.setState(st => ({ override: { ...st.override, [id]: 'refunded' }, refundOpen: false, refundId: null })); this.flash(`${id} 환불을 완료했습니다`); },
+      drawerOpen: s.drawerOpen,
+      dTitle: dd.title, dSubtitle: dd.subtitle, dBadge: dd.badge, dBlocks: dd.blocks, dActions: dd.actions, dAvatarPath: dd.path, dBg1: dd.bg1, dBg2: dd.bg2,
+      onCloseDrawer: () => this.setState({ drawerOpen: false }),
+      toast: s.toast,
+      toastStyle: `position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(${s.toast ? '0' : '14px'});background:#0B2A46;color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 16px 40px -10px rgba(11,42,70,.5);opacity:${s.toast ? '1' : '0'};pointer-events:none;transition:all .3s ease;z-index:100`,
+    };
+  }
+}
+</script>
+</body>
+</html>

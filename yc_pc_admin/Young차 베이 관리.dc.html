@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#F4F6F9}
+  a{color:#05B8CE;text-decoration:none}
+  a:hover{color:#0398AB}
+  [data-noscroll]{scrollbar-width:thin;scrollbar-color:#D5DCE5 transparent}
+  [data-noscroll]::-webkit-scrollbar{width:8px;height:8px}
+  [data-noscroll]::-webkit-scrollbar-thumb{background:#D5DCE5;border-radius:4px}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.3}}
+  input:focus{outline:none}
+  select:focus{outline:none}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
+  <div style="{{ sidebarWrapStyle }}">
+    <dc-import name="AdminSidebar" active="bay" collapsed="{{ collapsed }}" style="width:100%;height:100%" hint-size="240px,100%"></dc-import>
+  </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <dc-import name="AdminTopbar" title="베이 관리" style="display:block;width:100%" hint-size="100%,74px"></dc-import>
+    <div data-noscroll style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- FLOOR MAP -->
+      <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <span style="font-size:17px;font-weight:800;color:#0B2A46;white-space:nowrap">{{ floorTitle }}</span>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px">
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#20C79E"></span>사용 가능</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#3B82F6"></span>사용 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#94A3B8"></span>예약됨</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#F59E0B"></span>점검 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#EF4444"></span>수리 중</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;background:#F1F4F8;border-radius:10px;padding:3px">
+              <button onClick="{{ onFloor1 }}" style="{{ floor1Style }}">1F</button>
+              <button onClick="{{ onFloor2 }}" style="{{ floor2Style }}">2F</button>
+            </div>
+            <button onClick="{{ onViewAll }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E7ECF2;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:#475569;cursor:pointer" style-hover="color:#05B8CE">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+              전체 보기
+            </button>
+          </div>
+        </div>
+
+        <sc-if value="{{ is1F }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:stretch;gap:14px;background:linear-gradient(180deg,#FAFBFD,#F4F7FB);border:1.5px dashed #E1E7EF;border-radius:16px;padding:18px 14px">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;color:#94A3B8">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span style="font-size:12px;font-weight:800;writing-mode:vertical-rl">입&nbsp;구</span>
+          </div>
+          <div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
+            <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="12">
+              <div onClick="{{ bay.onSelect }}" style="{{ bay.tileStyle }}">
+                <span style="font-size:16px;font-weight:800;color:#0B2A46">{{ bay.n }}</span>
+                <span style="{{ bay.carStyle }}"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+                <span style="{{ bay.pillStyle }}">{{ bay.pillText }}</span>
+                <span style="{{ bay.subStyle }}">{{ bay.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;color:#94A3B8">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <span style="font-size:12px;font-weight:800;writing-mode:vertical-rl">출&nbsp;구</span>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ is2F }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#FAFBFD;border:1.5px dashed #E1E7EF;border-radius:16px;padding:60px 20px;color:#94A3B8">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span style="font-size:15px;font-weight:700;color:#64748B">2층 베이 데이터 준비 중</span>
+          <span style="font-size:13px">2층 확장 오픈 예정입니다.</span>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- BAY LIST TABLE -->
+      <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:20px 22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <span style="font-size:17px;font-weight:800;color:#0B2A46">베이 목록</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <select onChange="{{ onFilter }}" value="{{ filter }}" style="background:#F1F4F8;border:1px solid #E7ECF2;border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;color:#475569;cursor:pointer">
+              <option value="all">전체 상태</option>
+              <option value="avail">사용 가능</option>
+              <option value="inuse">사용 중</option>
+              <option value="reserved">예약됨</option>
+              <option value="maint">점검 중</option>
+              <option value="repair">수리 중</option>
+            </select>
+            <div style="display:flex;align-items:center;gap:7px;background:#F1F4F8;border:1px solid #E7ECF2;border-radius:10px;padding:9px 12px;width:240px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+              <input type="text" placeholder="베이 번호, 고객명, 차량번호 검색" value="{{ query }}" onInput="{{ onQuery }}" style="border:none;background:none;font-size:13px;color:#334155;width:100%;font-family:inherit">
+            </div>
+          </div>
+        </div>
+        <div data-noscroll style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;min-width:820px">
+            <thead>
+              <tr style="border-bottom:1.5px solid #EEF2F7">
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">베이 번호</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">상태</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">고객명</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">차량번호</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">서비스</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">시작 시간</th>
+                <th style="text-align:left;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">남은 시간</th>
+                <th style="text-align:right;font-size:12.5px;font-weight:700;color:#94A3B8;padding:0 12px 12px">작업</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                <tr style="{{ r.rowStyle }}" onClick="{{ r.onDetail }}">
+                  <td style="padding:13px 12px;font-size:14px;font-weight:700;color:#0B2A46">{{ r.n }}</td>
+                  <td style="padding:13px 12px"><span style="{{ r.statusPillStyle }}">{{ r.statusText }}</span></td>
+                  <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.cust }}</td>
+                  <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.plate }}</td>
+                  <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.service }}</td>
+                  <td style="padding:13px 12px;font-size:13.5px;color:#475569;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.start }}</td>
+                  <td style="padding:13px 12px;font-size:14px"><span style="{{ r.remainStyle }}">{{ r.remain }}</span></td>
+                  <td style="padding:10px 12px">
+                    <div style="display:flex;gap:6px;justify-content:flex-end">
+                      <button onClick="{{ r.onDetail }}" style="background:#fff;border:1px solid #E1E7EF;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:600;color:#475569;cursor:pointer;white-space:nowrap" style-hover="color:#05B8CE">상세 보기</button>
+                      <sc-if value="{{ r.isInuse }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onEnd }}" style="background:#EEF4FF;border:1px solid #D3E1FD;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;color:#2563EB;cursor:pointer;white-space:nowrap">이용 종료</button></sc-if>
+                      <sc-if value="{{ r.isReserved }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onCancel }}" style="background:#FFF3F3;border:1px solid #FBD5D5;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;color:#DC2626;cursor:pointer;white-space:nowrap">예약 취소</button></sc-if>
+                    </div>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <dc-import name="AdminDrawer" open="{{ drawerOpen }}" eyebrow="베이 상세" title="{{ dTitle }}" subtitle="{{ dSubtitle }}" avatar-text="{{ dAvatar }}" badge="{{ dBadge }}" blocks="{{ dBlocks }}" actions="{{ dActions }}" on-close="{{ onCloseDrawer }}" style="position:fixed;left:0;top:0;width:0;height:0;z-index:88" hint-size="0px,0px"></dc-import>
+  <div style="{{ toastStyle }}">{{ toast }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
+}">
+class Component extends DCLogic {
+  state = { t: 0, selectedBay: 1, drawerOpen: false, collapsed: false, floor: '1F', query: '', filter: 'all', override: {}, toast: '' };
+  BASE = { 1:'inuse',2:'avail',3:'reserved',4:'repair',5:'avail',6:'reserved',7:'inuse',8:'avail',9:'inuse',10:'maint',11:'reserved',12:'avail' };
+  DATA = {
+    1:{cust:'김영수',phone:'010-1234-5678',plate:'12가 3456',model:'현대 · 쏘나타 DN8',color:'화이트',service:'프리미엄 세차',start:'2025.06.20 13:10',useBase:5136,remBase:2064,fee:'28,000원',nfc:'NFC-1F-0001'},
+    3:{cust:'이민호',phone:'010-3456-1212',plate:'34나 5678',service:'스팀 세차',start:'2025.06.20 15:00',resv:'예약 15:00',nfc:'NFC-1F-0003'},
+    6:{cust:'박준호',phone:'010-5678-4444',plate:'56더 7890',service:'실내 세차',start:'2025.06.20 16:00',resv:'예약 16:00',nfc:'NFC-1F-0006'},
+    7:{cust:'최지원',phone:'010-2222-3333',plate:'23가 8901',model:'기아 · K5',color:'그레이',service:'기본 세차',start:'2025.06.20 13:47',useBase:2892,remBase:900,fee:'20,000원',nfc:'NFC-1F-0007'},
+    9:{cust:'정우성',phone:'010-4444-5555',plate:'88바 1234',model:'제네시스 · G80',color:'블랙',service:'프리미엄 세차',start:'2025.06.20 13:20',useBase:3918,remBase:660,fee:'38,000원',nfc:'NFC-1F-0009'},
+    10:{maintBase:1365,nfc:'NFC-1F-0010'},
+    11:{cust:'한지민',phone:'010-7777-8888',plate:'22바 5344',service:'하부 세차',start:'2025.06.20 17:00',resv:'예약 17:00',nfc:'NFC-1F-0011'},
+  };
+
+  componentDidMount() {
+    try { this.setState({ collapsed: localStorage.getItem('yc_sidebar_collapsed') === '1' }); } catch (e) {}
+    this.timer = setInterval(() => this.setState(s => ({ t: s.t + 1 })), 1000);
+    this._onToggle = () => this.setState(s => { const v = !s.collapsed; try { localStorage.setItem('yc_sidebar_collapsed', v ? '1' : '0'); } catch (e) {} return { collapsed: v }; });
+    window.addEventListener('yc:sidebar-toggle', this._onToggle);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this._tt); window.removeEventListener('yc:sidebar-toggle', this._onToggle); }
+
+  eff(n) { return this.state.override[n] || this.BASE[n]; }
+  statusMeta(st) {
+    const m = {
+      avail: { car:'#20C79E', bg:'#E4FAF3', fg:'#0FA588', text:'사용 가능' },
+      inuse: { car:'#3B82F6', bg:'#E9F0FE', fg:'#2563EB', text:'사용 중' },
+      reserved: { car:'#94A3B8', bg:'#EFF2F6', fg:'#64748B', text:'예약됨' },
+      repair: { car:'#EF4444', bg:'#FDECEC', fg:'#DC2626', text:'수리 중' },
+      maint: { car:'#F59E0B', bg:'#FEF3E2', fg:'#D97706', text:'점검 중' },
+    };
+    return m[st] || m.reserved;
+  }
+  hms(sec) { sec = Math.max(0, sec | 0); const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60; const p = n => String(n).padStart(2,'0'); return `${p(h)}:${p(m)}:${p(s)}`; }
+  flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  setStatus(n, st, msg) { this.setState(s => ({ override: { ...s.override, [n]: st } })); this.flash(msg); }
+  open(n) { this.setState({ selectedBay: n, drawerOpen: true }); }
+
+  buildDrawer(n) {
+    const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {}, t = this.state.t;
+    const inuse = st === 'inuse', reserved = st === 'reserved';
+    const blocks = [], actions = [];
+    if (inuse) {
+      blocks.push({ type:'cards', cols:2, items:[
+        { top:'고객', mid:d.cust, bottom:d.phone },
+        { top:'차량', mid:d.plate, bottom:(d.model||'') + (d.color ? ' · ' + d.color : '') },
+      ]});
+      blocks.push({ type:'rows', heading:'이용 정보', items:[
+        { label:'서비스', value:d.service },
+        { label:'시작 시간', value:d.start },
+        { label:'경과 시간', value:this.hms(d.useBase + t) },
+        { label:'남은 시간', value:this.hms(Math.max(0, d.remBase - t)), color:'blue' },
+        { label:'현재 요금', value:d.fee, color:'accent', strong:true },
+      ]});
+      blocks.push({ type:'qr', title:'QR·NFC 연결', sub:d.nfc, status:'세션 연결됨' });
+      actions.push({ text:'상태 변경', kind:'blue', onClick:() => this.flash('상태 변경 패널은 준비 중입니다') });
+      actions.push({ text:'이용 종료', kind:'danger', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 이용을 종료했습니다`) });
+      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
+    } else if (reserved) {
+      blocks.push({ type:'rows', heading:'예약 정보', items:[
+        { label:'예약 고객', value:d.cust },
+        { label:'연락처', value:d.phone, color:'default' },
+        { label:'차량번호', value:d.plate, color:'default' },
+        { label:'예약 서비스', value:d.service },
+        { label:'예약 시간', value:d.resv || d.start, color:'violet' },
+      ]});
+      blocks.push({ type:'qr', title:'QR·NFC 연결', sub:d.nfc, status:'예약 연결됨' });
+      actions.push({ text:'예약 취소', kind:'danger', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 예약을 취소했습니다`) });
+      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
+    } else if (st === 'avail') {
+      blocks.push({ type:'note', tone:'good', text:'이 베이는 비어 있어 즉시 배정 가능합니다. 고객이 QR·NFC를 태그하면 세션이 시작됩니다.' });
+      blocks.push({ type:'rows', heading:'설비 상태', items:[
+        { label:'QR·NFC 태그', value:d.nfc || '정상', color:'good' },
+        { label:'수압·세제', value:'정상', color:'good' },
+        { label:'마지막 세션', value:'12:30 종료', color:'default' },
+      ]});
+      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
+    } else {
+      const maint = st === 'maint';
+      blocks.push({ type:'note', tone: maint ? 'warn' : 'danger', text: maint ? '점검이 진행 중인 베이입니다. 완료 후 운영을 재개하세요.' : '수리 접수된 베이입니다. 장비 점검이 필요합니다.' });
+      blocks.push({ type:'rows', heading: maint ? '점검 정보' : '수리 정보', items:[
+        { label:'상태', value: meta.text, color: maint ? 'warn' : 'danger' },
+        { label:'경과 시간', value: this.hms((d.maintBase || 0) + t) },
+        { label:'담당', value:'현장 매니저' },
+      ]});
+      actions.push({ text:'운영 재개', kind:'primary', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 운영을 재개했습니다`) });
+    }
+    return {
+      title: `${n}번 베이`,
+      subtitle: `1F · 베이 ${n}`,
+      avatar: String(n),
+      badge: { text: meta.text, bg: meta.bg, fg: meta.fg },
+      blocks, actions,
+    };
+  }
+
+  renderVals() {
+    const s = this.state, t = s.t;
+    const nums = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    const bays = nums.map(n => {
+      const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {}, sel = s.selectedBay === n;
+      let sub = '-', subCol = '#CBD5E1';
+      if (st === 'inuse') { sub = this.hms(d.useBase + t); subCol = '#2563EB'; }
+      else if (st === 'reserved') { sub = d.resv || '예약'; subCol = '#64748B'; }
+      else if (st === 'maint') { sub = this.hms((d.maintBase || 0) + t); subCol = '#D97706'; }
+      return {
+        n,
+        tileStyle: `display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 8px 12px;border-radius:16px;background:#fff;border:1.5px solid ${sel ? '#24D7CB' : '#EAEEF3'};box-shadow:${sel ? '0 0 0 3px rgba(36,215,203,.18)' : '0 2px 8px rgba(15,40,70,.04)'};cursor:pointer;transition:all .15s`,
+        carStyle: `color:${meta.car};display:flex`,
+        pillStyle: `font-size:12px;font-weight:700;padding:3px 11px;border-radius:9px;background:${meta.bg};color:${meta.fg}`,
+        pillText: meta.text,
+        sub, subStyle: `font-size:13px;font-weight:700;color:${subCol};font-variant-numeric:tabular-nums`,
+        onSelect: () => this.open(n),
+      };
+    });
+
+    const q = s.query.replace(/\s/g, '');
+    const rows = nums.map(n => {
+      const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {};
+      const inuse = st === 'inuse', reserved = st === 'reserved';
+      const remain = inuse ? this.hms(d.useBase + t) : (reserved ? '예약 대기' : '-');
+      return {
+        n, _st: st,
+        rowStyle: `border-bottom:1px solid #F3F6F9;cursor:pointer;transition:background .12s;${s.selectedBay === n && s.drawerOpen ? 'background:#F3FCFB' : ''}`,
+        statusPillStyle: `display:inline-flex;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:8px;background:${meta.bg};color:${meta.fg}`,
+        statusText: meta.text,
+        cust: d.cust || '-', plate: d.plate || '-', service: d.service || '-', start: d.start || '-',
+        remain, remainStyle: `font-variant-numeric:tabular-nums;font-weight:${inuse ? 700 : 500};color:${inuse ? '#2563EB' : '#94A3B8'}`,
+        isInuse: inuse, isReserved: reserved,
+        onDetail: () => this.open(n),
+        onEnd: () => this.setStatus(n, 'avail', `${n}번 베이 이용을 종료했습니다`),
+        onCancel: () => this.setStatus(n, 'avail', `${n}번 베이 예약을 취소했습니다`),
+      };
+    }).filter(r => (s.filter === 'all' || r._st === s.filter) && (q === '' || String(r.n).includes(q) || r.cust.includes(s.query) || r.plate.replace(/\s/g, '').includes(q)));
+
+    const dd = this.buildDrawer(s.selectedBay);
+
+    return {
+      collapsed: s.collapsed,
+      sidebarWrapStyle: `flex:0 0 ${s.collapsed ? 74 : 240}px;height:100%;position:relative;z-index:30;transition:flex-basis .25s ease`,
+      floorTitle: `베이 현황 (${s.floor})`,
+      is1F: s.floor === '1F', is2F: s.floor === '2F',
+      floor1Style: `border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;${s.floor === '1F' ? 'background:#fff;color:#0B2A46;box-shadow:0 1px 4px rgba(15,40,70,.1)' : 'background:transparent;color:#94A3B8'}`,
+      floor2Style: `border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;${s.floor === '2F' ? 'background:#fff;color:#0B2A46;box-shadow:0 1px 4px rgba(15,40,70,.1)' : 'background:transparent;color:#94A3B8'}`,
+      onFloor1: () => this.setState({ floor: '1F' }),
+      onFloor2: () => this.setState({ floor: '2F' }),
+      onViewAll: () => this.flash('전체 층 통합 뷰는 준비 중입니다'),
+      bays, rows,
+      query: s.query, filter: s.filter,
+      onQuery: e => this.setState({ query: e.target.value }),
+      onFilter: e => this.setState({ filter: e.target.value }),
+      drawerOpen: s.drawerOpen,
+      dTitle: dd.title, dSubtitle: dd.subtitle, dAvatar: dd.avatar, dBadge: dd.badge, dBlocks: dd.blocks, dActions: dd.actions,
+      onCloseDrawer: () => this.setState({ drawerOpen: false }),
+      toast: s.toast,
+      toastStyle: `position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(${s.toast ? '0' : '14px'});background:#0B2A46;color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 16px 40px -10px rgba(11,42,70,.5);opacity:${s.toast ? '1' : '0'};pointer-events:none;transition:all .3s ease;z-index:80`,
+    };
+  }
+}
+</script>
+</body>
+</html>

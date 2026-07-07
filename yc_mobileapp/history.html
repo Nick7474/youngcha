@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Young차 - 세차 내역</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Summary dashboard */
+.summary-card{margin:16px 20px 0;padding:20px;background:var(--bg-card);border-radius:var(--r-xl);box-shadow:var(--sh-md);position:relative;overflow:hidden}
+[data-theme="dark"] .summary-card{border:1px solid var(--bg-div)}
+.summary-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:var(--grad);border-radius:50%;opacity:.07}
+.sc-greeting{font-size:14px;color:var(--t2);margin-bottom:6px}
+.sc-main{font-size:22px;font-weight:800;color:var(--t1);line-height:1.3;margin-bottom:16px}
+.sc-main span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sc-stats{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;padding-top:16px;border-top:1px solid var(--bg-div)}
+.sc-stat{text-align:center;padding:4px 0}
+.sc-stat-val{font-family:var(--en);font-size:22px;font-weight:800;color:var(--t1);margin-bottom:2px}
+.sc-stat-val.mint{color:var(--mint)}
+.sc-stat-label{font-size:11px;color:var(--t3);font-weight:600}
+.sc-div{background:var(--bg-div)}
+
+/* Filter tabs */
+.filter-tabs{display:flex;gap:8px;padding:16px 20px 0;overflow-x:auto}
+.filter-tabs::-webkit-scrollbar{display:none}
+
+/* History list */
+.history-list{padding:12px 20px 0}
+.hist-card{background:var(--bg-card);border-radius:var(--r-lg);padding:18px;margin-bottom:12px;box-shadow:var(--sh-sm);cursor:pointer;transition:transform var(--tf),box-shadow var(--tf);position:relative;overflow:hidden}
+[data-theme="dark"] .hist-card{border:1px solid var(--bg-div)}
+.hist-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.hist-card:active{transform:translateY(0)}
+
+.hc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.hc-date{font-size:12px;font-weight:600;color:var(--t3)}
+.hc-title{font-size:16px;font-weight:700;color:var(--t1);margin-top:2px}
+.hc-badge-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+
+.hc-body{display:flex;gap:20px}
+.hc-detail{display:flex;flex-direction:column;gap:6px}
+.hc-row{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2)}
+.hc-row svg{width:14px;height:14px;stroke:var(--t3);stroke-width:2;fill:none;flex-shrink:0}
+
+.hc-price-area{margin-left:auto;text-align:right}
+.hc-orig-price{font-size:12px;color:var(--t3);text-decoration:line-through;margin-bottom:2px}
+.hc-final-price{font-family:var(--en);font-size:20px;font-weight:800;color:var(--t1)}
+.hc-disc{font-size:12px;font-weight:700;color:var(--mint);margin-top:3px}
+
+.hc-bottom{margin-top:12px;padding-top:12px;border-top:1px solid var(--bg-div);display:flex;align-items:center;justify-content:space-between}
+.hc-weather{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t3)}
+.hc-weather svg{width:14px;height:14px;stroke:var(--t3);stroke-width:1.8;fill:none}
+.hc-detail-link{font-size:12px;font-weight:600;color:var(--mint);display:flex;align-items:center;gap:3px}
+.hc-detail-link svg{width:12px;height:12px;stroke:var(--mint);stroke-width:2.5}
+
+/* Month separator */
+.month-sep{font-size:12px;font-weight:700;color:var(--t3);letter-spacing:.5px;padding:16px 20px 8px;text-transform:uppercase}
+
+/* Receipt Modal */
+.receipt-modal .modal{max-height:85vh;overflow-y:auto;padding:0}
+.receipt-header{padding:24px 24px 16px;position:relative;background:var(--grad);border-radius:var(--r-xl) var(--r-xl) 0 0}
+.receipt-header::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:var(--bg-card);border-radius:20px 20px 0 0}
+.rh-icon{width:52px;height:52px;border-radius:var(--r-lg);background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.rh-icon svg{width:28px;height:28px;stroke:#fff;stroke-width:1.8;fill:none}
+.rh-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:3px}
+.rh-date{font-size:13px;color:rgba(255,255,255,.75)}
+.receipt-body{padding:20px 24px}
+.receipt-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--bg-div)}
+.receipt-row:last-child{border-bottom:none}
+.rr-label{font-size:14px;color:var(--t2)}
+.rr-val{font-size:14px;font-weight:600;color:var(--t1)}
+.rr-val.mint{color:var(--mint);font-size:15px;font-weight:800}
+.rr-val.red{color:var(--red);font-weight:700}
+.receipt-total{padding:16px 24px;background:var(--bg);border-top:2px solid var(--bg-div)}
+[data-theme="dark"] .receipt-total{background:var(--bg-div)}
+.rt-label{font-size:13px;color:var(--t3);margin-bottom:4px}
+.rt-amount{font-family:var(--en);font-size:30px;font-weight:800;color:var(--t1)}
+.rt-disc{font-size:14px;font-weight:700;color:var(--mint);margin-top:4px}
+.receipt-foot{padding:16px 24px 24px;display:flex;gap:10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-hdr">
+    <div class="top-hdr__title">세차 내역</div>
+    <div class="top-hdr__acts">
+      <div class="icon-btn" onclick="Toast.show('내역을 내보냈습니다')">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor"><path d="M4 14v3a1 1 0 001 1h12a1 1 0 001-1v-3M11 3v11M7 9l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <!-- Summary -->
+    <div class="summary-card a-fade-up">
+      <div class="sc-greeting">안녕하세요, 민수님 👋</div>
+      <div class="sc-main">이번 달 <span>3번</span> 세차했어요!<br>깨끗한 차를 유지하고 있네요 ✨</div>
+      <div class="sc-stats">
+        <div class="sc-stat">
+          <div class="sc-stat-val mint">3</div>
+          <div class="sc-stat-label">이번달 세차</div>
+        </div>
+        <div class="sc-div"></div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">24,000</div>
+          <div class="sc-stat-label">결제금액(원)</div>
+        </div>
+        <div class="sc-div"></div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">7,200</div>
+          <div class="sc-stat-label">절약금액(원)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-tabs a-fade-up s1">
+      <div class="chip chip-on" onclick="filterHistory(this,'all')">전체</div>
+      <div class="chip chip-off" onclick="filterHistory(this,'month')">이번달</div>
+      <div class="chip chip-off" onclick="filterHistory(this,'sale')">타임세일</div>
+      <div class="chip chip-off" onclick="filterHistory(this,'extend')">시간연장</div>
+    </div>
+
+    <!-- March -->
+    <div class="month-sep a-fade-up s2">2025년 3월</div>
+    <div class="history-list">
+
+      <div class="hist-card a-fade-up s2" onclick="openReceipt(0)">
+        <div class="hc-top">
+          <div>
+            <div class="hc-date">2025.03.10 (월) 오후 2:34</div>
+            <div class="hc-title">기본 세차 + 폼건</div>
+          </div>
+          <div class="hc-badge-wrap">
+            <div class="badge badge-green">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="4.5"/><path d="M4 6l1.5 1.5L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              완료
+            </div>
+            <div class="badge badge-sale">SALE -30%</div>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-detail">
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M7 6v2M5 7.5h4" stroke-linecap="round"/></svg>
+              3번 베이 · 20분
+            </div>
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M2 11c0-2.5 2-4.5 5-4.5s5 2 5 4.5" stroke-linecap="round"/><circle cx="7" cy="4" r="2.5"/></svg>
+              시간 연장 1회
+            </div>
+          </div>
+          <div class="hc-price-area">
+            <div class="hc-orig-price">₩12,000</div>
+            <div class="hc-final-price">₩8,400</div>
+            <div class="hc-disc">-₩3,600 할인</div>
+          </div>
+        </div>
+        <div class="hc-bottom">
+          <div class="hc-weather">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><circle cx="7" cy="5.5" r="2.5"/><path d="M4 11a3 3 0 016 0" stroke-linecap="round"/></svg>
+            맑음 · 18°C · 미세먼지 좋음
+          </div>
+          <div class="hc-detail-link">
+            영수증 보기
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M4 6h6M7 4l3 2-3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="hist-card a-fade-up s3" onclick="openReceipt(1)">
+        <div class="hc-top">
+          <div>
+            <div class="hc-date">2025.03.05 (수) 오전 10:12</div>
+            <div class="hc-title">프리미엄 세차</div>
+          </div>
+          <div class="hc-badge-wrap">
+            <div class="badge badge-green">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="4.5"/><path d="M4 6l1.5 1.5L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              완료
+            </div>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-detail">
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M7 6v2M5 7.5h4" stroke-linecap="round"/></svg>
+              1번 베이 · 30분
+            </div>
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><path d="M7 2l1.5 3.5L12 6l-2.5 2.5.6 3.5L7 10.5 3.9 12l.6-3.5L2 6l3.5-.5z" stroke-linejoin="round"/></svg>
+              광택 코팅 포함
+            </div>
+          </div>
+          <div class="hc-price-area">
+            <div class="hc-orig-price"></div>
+            <div class="hc-final-price">₩15,000</div>
+            <div class="hc-disc" style="color:var(--t3)">정가 결제</div>
+          </div>
+        </div>
+        <div class="hc-bottom">
+          <div class="hc-weather">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><circle cx="7" cy="5.5" r="2.5"/><path d="M4 11a3 3 0 016 0" stroke-linecap="round"/></svg>
+            흐림 · 14°C · 미세먼지 보통
+          </div>
+          <div class="hc-detail-link">
+            영수증 보기
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M4 6h6M7 4l3 2-3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="hist-card a-fade-up s4" onclick="openReceipt(2)">
+        <div class="hc-top">
+          <div>
+            <div class="hc-date">2025.03.01 (토) 오후 4:55</div>
+            <div class="hc-title">기본 세차</div>
+          </div>
+          <div class="hc-badge-wrap">
+            <div class="badge badge-green">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="4.5"/><path d="M4 6l1.5 1.5L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              완료
+            </div>
+            <div class="badge badge-sale">SALE -30%</div>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-detail">
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M7 6v2M5 7.5h4" stroke-linecap="round"/></svg>
+              5번 베이 · 15분
+            </div>
+          </div>
+          <div class="hc-price-area">
+            <div class="hc-orig-price">₩8,000</div>
+            <div class="hc-final-price">₩5,600</div>
+            <div class="hc-disc">-₩2,400 할인</div>
+          </div>
+        </div>
+        <div class="hc-bottom">
+          <div class="hc-weather">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><circle cx="7" cy="5.5" r="2.5"/><path d="M4 11a3 3 0 016 0" stroke-linecap="round"/></svg>
+            맑음 · 20°C · 미세먼지 좋음
+          </div>
+          <div class="hc-detail-link">
+            영수증 보기
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M4 6h6M7 4l3 2-3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feb -->
+    <div class="month-sep">2025년 2월</div>
+    <div class="history-list" style="padding-top:0">
+      <div class="hist-card" onclick="openReceipt(3)">
+        <div class="hc-top">
+          <div>
+            <div class="hc-date">2025.02.22 (토) 오후 1:10</div>
+            <div class="hc-title">스노우 폼건</div>
+          </div>
+          <div class="hc-badge-wrap">
+            <div class="badge badge-green">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="4.5"/><path d="M4 6l1.5 1.5L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              완료
+            </div>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-detail">
+            <div class="hc-row">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M7 6v2M5 7.5h4" stroke-linecap="round"/></svg>
+              2번 베이 · 20분
+            </div>
+          </div>
+          <div class="hc-price-area">
+            <div class="hc-orig-price"></div>
+            <div class="hc-final-price">₩12,000</div>
+            <div class="hc-disc" style="color:var(--t3)">정가 결제</div>
+          </div>
+        </div>
+        <div class="hc-bottom">
+          <div class="hc-weather">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor"><circle cx="7" cy="5.5" r="2.5"/><path d="M4 11a3 3 0 016 0" stroke-linecap="round"/></svg>
+            맑음 · 12°C
+          </div>
+          <div class="hc-detail-link">
+            영수증 보기
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M4 6h6M7 4l3 2-3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+  </div>
+
+  <!-- GNB -->
+  <nav class="gnb">
+    <a class="gnb-item" href="home.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>홈</span>
+    </a>
+    <a class="gnb-item" href="washing.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg>
+      <span>세차중</span>
+    </a>
+    <a class="gnb-item active" href="history.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 4V2M16 4V2M3 9h18M8 14h2M12 14h4M8 18h2" stroke-linecap="round"/></svg>
+      <span>세차내역</span>
+    </a>
+    <a class="gnb-item" href="mypage.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke-linecap="round"/></svg>
+      <span>마이페이지</span>
+    </a>
+  </nav>
+
+  <!-- Receipt Modal -->
+  <div class="modal-overlay receipt-modal" id="receipt-modal">
+    <div class="modal" id="receipt-content">
+      <!-- JS fills this -->
+    </div>
+  </div>
+
+  <div class="toast-wrap"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const receipts = [
+  {title:'기본 세차 + 폼건',date:'2025.03.10 월요일',time:'오후 2:34',bay:'3번 베이',duration:'20분',option:'기본세차+스노우폼건',orig:12000,disc:3600,final:8400,extend:1,extAmt:3000,weather:'맑음 18°C'},
+  {title:'프리미엄 세차',date:'2025.03.05 수요일',time:'오전 10:12',bay:'1번 베이',duration:'30분',option:'프리미엄 세차',orig:15000,disc:0,final:15000,extend:0,extAmt:0,weather:'흐림 14°C'},
+  {title:'기본 세차',date:'2025.03.01 토요일',time:'오후 4:55',bay:'5번 베이',duration:'15분',option:'기본 세차',orig:8000,disc:2400,final:5600,extend:0,extAmt:0,weather:'맑음 20°C'},
+  {title:'스노우 폼건',date:'2025.02.22 토요일',time:'오후 1:10',bay:'2번 베이',duration:'20분',option:'스노우 폼건',orig:12000,disc:0,final:12000,extend:0,extAmt:0,weather:'맑음 12°C'},
+];
+
+function openReceipt(idx){
+  const r = receipts[idx];
+  const total = r.final + r.extAmt;
+  const hasDisc = r.disc>0;
+  document.getElementById('receipt-content').innerHTML = `
+    <div class="receipt-header">
+      <div class="rh-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="white" stroke-width="1.8"><rect x="4" y="3" width="20" height="22" rx="2"/><path d="M9 8h10M9 13h10M9 18h6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="rh-title">${r.title}</div>
+      <div class="rh-date">${r.date} · ${r.time}</div>
+    </div>
+    <div class="receipt-body">
+      <div class="receipt-row"><span class="rr-label">이용 베이</span><span class="rr-val">${r.bay}</span></div>
+      <div class="receipt-row"><span class="rr-label">이용 시간</span><span class="rr-val">${r.duration}</span></div>
+      <div class="receipt-row"><span class="rr-label">선택 상품</span><span class="rr-val">${r.option}</span></div>
+      <div class="receipt-row"><span class="rr-label">날씨</span><span class="rr-val">${r.weather}</span></div>
+      <div class="receipt-row"><span class="rr-label">상품 금액</span><span class="rr-val">₩${r.orig.toLocaleString()}</span></div>
+      ${hasDisc?`<div class="receipt-row"><span class="rr-label">타임세일 할인</span><span class="rr-val mint">-₩${r.disc.toLocaleString()} (30%↓)</span></div>`:''}
+      ${r.extend>0?`<div class="receipt-row"><span class="rr-label">시간연장 (${r.extend}회)</span><span class="rr-val">₩${r.extAmt.toLocaleString()}</span></div>`:''}
+      <div class="receipt-row"><span class="rr-label">결제 수단</span><span class="rr-val">신한카드 ****1234</span></div>
+    </div>
+    <div class="receipt-total">
+      <div class="rt-label">최종 결제금액</div>
+      <div class="rt-amount">₩${total.toLocaleString()}</div>
+      ${hasDisc?`<div class="rt-disc">타임세일로 ₩${r.disc.toLocaleString()} 절약했어요! 🎉</div>`:''}
+    </div>
+    <div class="receipt-foot">
+      <button class="btn btn-ghost" style="flex:1" onclick="Modal.close('receipt-modal')">닫기</button>
+      <button class="btn btn-primary" style="flex:2" onclick="Toast.show('영수증을 저장했습니다');Modal.close('receipt-modal')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M4 14v3a1 1 0 001 1h10a1 1 0 001-1v-3M10 3v11M6 9l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        영수증 저장
+      </button>
+    </div>
+  `;
+  Modal.open('receipt-modal');
+}
+
+function filterHistory(el, type){
+  document.querySelectorAll('.filter-tabs .chip').forEach(c=>{c.classList.remove('chip-on');c.classList.add('chip-off');});
+  el.classList.remove('chip-off');
+  el.classList.add('chip-on');
+  Toast.show('필터: '+el.textContent.trim());
+}
+</script>
+</body>
+</html>

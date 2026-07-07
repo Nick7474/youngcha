@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#DEE4EC}
+  a{color:#17B26A;text-decoration:none}
+  a:hover{color:#0E9F62}
+  [data-noscroll]{scrollbar-width:none;-ms-overflow-style:none}
+  [data-noscroll]::-webkit-scrollbar{display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.05)}100%{transform:scale(1)}}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(1200px 700px at 50% -10%,#EAF0F7,#DEE4EC)">
+  <div style="position:relative;width:404px;height:838px;background:#0A0C10;border-radius:56px;padding:11px;box-shadow:0 40px 90px -30px rgba(11,42,70,.55),0 0 0 2px #1c2029,inset 0 0 0 2px #33373f">
+    <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#0A0C10;border-radius:16px;z-index:40"></div>
+    <div style="position:relative;width:100%;height:100%;background:#F4F7FA;border-radius:46px;overflow:hidden;display:flex;flex-direction:column">
+
+      <!-- top bar -->
+      <div style="flex:0 0 auto;background:#fff;padding:16px 20px 12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;height:22px;margin-bottom:8px">
+          <span style="font-size:14px;font-weight:700;color:#0B2A46;letter-spacing:.3px">{{ statusTime }}</span>
+          <div style="display:flex;align-items:center;gap:6px;color:#0B2A46">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="17" height="13" viewBox="0 0 17 13" fill="currentColor"><path d="M8.5 2.5c2.6 0 5 1 6.8 2.7l1.2-1.4A11 11 0 0 0 8.5.4 11 11 0 0 0 .5 3.8l1.2 1.4A9.6 9.6 0 0 1 8.5 2.5Zm0 3.4c1.6 0 3.1.6 4.2 1.7l1.3-1.4a8 8 0 0 0-11 0l1.3 1.4A6 6 0 0 1 8.5 5.9Zm0 3.4c.8 0 1.5.3 2 .9l-2 2.3-2-2.3c.5-.6 1.2-.9 2-.9Z"/></svg>
+            <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x="1" y="1" width="21" height="11" rx="3" stroke="currentColor" stroke-width="1.2" opacity=".4"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="1.6" fill="currentColor"/><rect x="23.4" y="4" width="1.6" height="5" rx=".8" fill="currentColor" opacity=".5"/></svg>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <button onClick="{{ onStore }}" style="display:flex;align-items:center;gap:5px;background:none;border:none;padding:0;cursor:pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#17B26A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            <span style="font-size:17px;font-weight:800;color:#0B2A46;white-space:nowrap">{{ storeName }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button onClick="{{ onBell }}" style="position:relative;background:none;border:none;padding:0;cursor:pointer;color:#0B2A46">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
+              <span style="position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;background:#EF4444;color:#fff;border-radius:9px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff">{{ notifCount }}</span>
+            </button>
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#17B26A,#14C4B0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px">영</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- scroll content -->
+      <div data-noscroll style="flex:1;overflow-y:auto;padding:16px 20px 96px">
+        <p style="font-size:14px;color:#64748B;font-weight:500;margin-bottom:14px">{{ greetingName }}님, 오늘도 반짝이는 하루 되세요.</p>
+
+        <!-- active session hero -->
+        <sc-if value="{{ sessionActive }}" hint-placeholder-val="{{ true }}">
+        <div style="border-radius:24px;padding:20px;background:linear-gradient(135deg,#0B2A46 0%,#0F5E70 58%,#17B26A 128%);color:#fff;box-shadow:0 18px 40px -18px rgba(11,42,70,.65);margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.16);padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#5DF2B0;animation:livedot 1.4s ease-in-out infinite"></span>이용 중</span>
+              <span style="font-size:14px;font-weight:600;opacity:.85;white-space:nowrap">{{ sesBay }}번 베이 · {{ sesService }}</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px">
+            <div style="position:relative;width:128px;height:128px;flex:0 0 auto">
+              <svg width="128" height="128" viewBox="0 0 128 128">
+                <circle cx="64" cy="64" r="54" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="11"/>
+                <circle cx="64" cy="64" r="54" fill="none" stroke="#5DF2B0" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{ ringCirc }}" stroke-dashoffset="{{ ringOffset }}" transform="rotate(-90 64 64)" style="transition:stroke-dashoffset .6s ease"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <span style="font-size:11px;opacity:.75;font-weight:600;margin-bottom:1px">남은 시간</span>
+                <span style="font-size:27px;font-weight:800;letter-spacing:.5px;font-variant-numeric:tabular-nums">{{ remainLabel }}</span>
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="font-size:12px;opacity:.7;margin-bottom:2px">경과 시간</div>
+                <div style="font-size:16px;font-weight:700;font-variant-numeric:tabular-nums">{{ elapsedLabel }}</div>
+              </div>
+              <div>
+                <div style="font-size:12px;opacity:.7;margin-bottom:2px">현재 요금</div>
+                <div style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums">{{ feeLabel }}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:18px">
+            <button onClick="{{ onExtend }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:48px;border-radius:14px;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:15px;font-weight:700;cursor:pointer">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg>
+              시간 연장 <span style="opacity:.7;font-weight:600">+10분</span>
+            </button>
+            <button onClick="{{ onPay }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:48px;border-radius:14px;border:none;background:#fff;color:#0B2A46;font-size:15px;font-weight:800;cursor:pointer">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/></svg>
+              10초 결제
+            </button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- no session CTA -->
+        <sc-if value="{{ noSession }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius:24px;padding:22px;background:linear-gradient(135deg,#17B26A,#14C4B0);color:#fff;box-shadow:0 18px 40px -18px rgba(23,178,106,.6);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:19px;font-weight:800;margin-bottom:4px">세차를 시작해볼까요?</div>
+            <div style="font-size:13px;opacity:.9">베이의 QR·NFC를 태그하면 바로 시작돼요</div>
+          </div>
+          <button onClick="{{ onScan }}" style="display:flex;align-items:center;gap:6px;background:#fff;color:#0E9F62;border:none;padding:12px 16px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h3"/><path d="M17 4h3v3"/><path d="M20 17v3h-3"/><path d="M7 20H4v-3"/><path d="M4 12h16"/></svg>
+            스캔
+          </button>
+        </div>
+        </sc-if>
+
+        <!-- time sale banner -->
+        <sc-if value="{{ showTimeSale }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ onSale }}" style="width:100%;text-align:left;border:none;cursor:pointer;border-radius:20px;padding:16px 18px;margin-bottom:16px;background:linear-gradient(120deg,#14C4B0,#17B26A);color:#fff;display:flex;align-items:center;gap:14px;box-shadow:0 12px 28px -14px rgba(20,196,176,.6)">
+          <div style="flex:0 0 auto;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 11.4 12.4 3.2A2 2 0 0 0 11 2.6H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .6 1.4l8.2 8.2a2 2 0 0 0 2.8 0l6.9-6.9a2 2 0 0 0 0-2.8Z"/><circle cx="7.5" cy="7.5" r="1.3" fill="#fff"/></svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:800;margin-bottom:2px">지금 오프피크 타임세일 · {{ salePct }} 할인</div>
+            <div style="font-size:12.5px;opacity:.9">종료까지 <b style="font-variant-numeric:tabular-nums">{{ saleCountLabel }}</b> · 새벽엔 세차도 저렴하게</div>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </button>
+        </sc-if>
+
+        <!-- real-time bays -->
+        <div style="background:#fff;border-radius:20px;padding:16px;box-shadow:0 6px 20px rgba(15,40,70,.06);border:1px solid #EEF2F7;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:16px;font-weight:800;color:#0B2A46">실시간 빈 베이</span>
+              <span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#17B26A;background:#E7F8EF;padding:3px 8px;border-radius:10px"><span style="width:5px;height:5px;border-radius:50%;background:#17B26A;animation:livedot 1.4s ease-in-out infinite"></span>LIVE</span>
+            </div>
+            <button onClick="{{ onRefresh }}" style="display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;color:#64748B;font-size:12px;font-weight:600;padding:0">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="{{ spinStyle }}"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+              새로고침
+            </button>
+          </div>
+          <div style="font-size:13px;color:#64748B;margin-bottom:14px"><b style="color:#17B26A;font-size:15px">{{ availCount }}</b> / {{ totalBays }}대 지금 이용 가능</div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px">
+            <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="12">
+              <div style="{{ bay.style }}">{{ bay.n }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px 16px;margin-bottom:14px">
+            <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:9px;height:9px;border-radius:3px;background:#17B26A"></span>이용 가능</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:9px;height:9px;border-radius:3px;background:#3B82F6"></span>이용 중</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:9px;height:9px;border-radius:3px;background:#94A3B8"></span>예약됨</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:9px;height:9px;border-radius:3px;background:#EF4444"></span>점검·수리</span>
+          </div>
+          <button onClick="{{ onReserve }}" style="width:100%;height:46px;border-radius:14px;border:1.5px solid #17B26A;background:#F1FBF5;color:#0E9F62;font-size:15px;font-weight:800;cursor:pointer">빈 베이 예약하기</button>
+        </div>
+
+        <!-- quick actions -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+          <button onClick="{{ onScan }}" style="background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+            <span style="width:42px;height:42px;border-radius:13px;background:#E7F8EF;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#17B26A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h3"/><path d="M17 4h3v3"/><path d="M20 17v3h-3"/><path d="M7 20H4v-3"/><path d="M4 12h16"/></svg></span>
+            <span style="font-size:12px;font-weight:600;color:#334155">QR·NFC</span>
+          </button>
+          <button onClick="{{ onPay }}" style="background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+            <span style="width:42px;height:42px;border-radius:13px;background:#E9F0FE;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/></svg></span>
+            <span style="font-size:12px;font-weight:600;color:#334155">간편결제</span>
+          </button>
+          <button onClick="{{ onExtend }}" style="background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+            <span style="width:42px;height:42px;border-radius:13px;background:#FEF3E2;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 1.5"/></svg></span>
+            <span style="font-size:12px;font-weight:600;color:#334155">시간연장</span>
+          </button>
+          <button onClick="{{ onHistory }}" style="background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+            <span style="width:42px;height:42px;border-radius:13px;background:#F1EEFC;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h11"/><path d="M8 12h11"/><path d="M8 18h8"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span>
+            <span style="font-size:12px;font-weight:600;color:#334155">이용내역</span>
+          </button>
+        </div>
+
+        <!-- services -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:16px;font-weight:800;color:#0B2A46">세차 상품</span>
+          <a href="#" style="font-size:13px;font-weight:600;color:#64748B">전체보기</a>
+        </div>
+        <div data-noscroll style="display:flex;gap:12px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px">
+          <div style="flex:0 0 148px;background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,40,70,.05)">
+            <span style="width:40px;height:40px;border-radius:12px;background:#E9F0FE;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg></span>
+            <div style="font-size:14.5px;font-weight:700;color:#0B2A46;margin-bottom:3px">기본 세차</div>
+            <div style="font-size:12px;color:#94A3B8;margin-bottom:8px">외부 폼·건조</div>
+            <div style="font-size:16px;font-weight:800;color:#17B26A">20,000<span style="font-size:12px;color:#64748B;font-weight:600">원</span></div>
+          </div>
+          <div style="flex:0 0 148px;background:#fff;border:1px solid #C6EED8;border-radius:18px;padding:16px;box-shadow:0 8px 20px rgba(23,178,106,.1);position:relative">
+            <span style="position:absolute;top:12px;right:12px;font-size:10px;font-weight:800;color:#fff;background:#17B26A;padding:3px 8px;border-radius:9px">인기</span>
+            <span style="width:40px;height:40px;border-radius:12px;background:#E7F8EF;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#17B26A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.1 6.3L20.4 9l-5.1 3.7L17 19l-5-3.6L7 19l1.7-6.3L3.6 9l6.3.3Z"/></svg></span>
+            <div style="font-size:14.5px;font-weight:700;color:#0B2A46;margin-bottom:3px">프리미엄 세차</div>
+            <div style="font-size:12px;color:#94A3B8;margin-bottom:8px">폼·왁스·광택</div>
+            <div style="font-size:16px;font-weight:800;color:#17B26A">38,000<span style="font-size:12px;color:#64748B;font-weight:600">원</span></div>
+          </div>
+          <div style="flex:0 0 148px;background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,40,70,.05)">
+            <span style="width:40px;height:40px;border-radius:12px;background:#F1EEFC;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+            <div style="font-size:14.5px;font-weight:700;color:#0B2A46;margin-bottom:3px">실내 세차</div>
+            <div style="font-size:12px;color:#94A3B8;margin-bottom:8px">진공·매트·먼지</div>
+            <div style="font-size:16px;font-weight:800;color:#17B26A">30,000<span style="font-size:12px;color:#64748B;font-weight:600">원</span></div>
+          </div>
+          <div style="flex:0 0 148px;background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,40,70,.05)">
+            <span style="width:40px;height:40px;border-radius:12px;background:#FEF3E2;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <div style="font-size:14.5px;font-weight:700;color:#0B2A46;margin-bottom:3px">타이어 광택</div>
+            <div style="font-size:12px;color:#94A3B8;margin-bottom:8px">휠·타이어 코팅</div>
+            <div style="font-size:16px;font-weight:800;color:#17B26A">15,000<span style="font-size:12px;color:#64748B;font-weight:600">원</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- toast -->
+      <div style="{{ toastStyle }}">{{ toastMsg }}</div>
+
+      <!-- bottom nav -->
+      <div style="flex:0 0 auto;background:#fff;border-top:1px solid #EEF2F7;padding:8px 12px 20px;display:flex;box-shadow:0 -4px 20px rgba(15,40,70,.04)">
+        <button onClick="{{ onNavHome }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+          <div style="{{ navHome }}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 21v-6h6v6"/></svg><span style="font-size:11px;font-weight:700;margin-top:3px;display:block;text-align:center">홈</span></div>
+        </button>
+        <button onClick="{{ onNavBay }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+          <div style="{{ navBay }}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span style="font-size:11px;font-weight:700;margin-top:3px;display:block;text-align:center">베이</span></div>
+        </button>
+        <button onClick="{{ onNavSale }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+          <div style="{{ navSale }}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 11.4 12.4 3.2A2 2 0 0 0 11 2.6H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .6 1.4l8.2 8.2a2 2 0 0 0 2.8 0l6.9-6.9a2 2 0 0 0 0-2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg><span style="font-size:11px;font-weight:700;margin-top:3px;display:block;text-align:center">타임세일</span></div>
+        </button>
+        <button onClick="{{ onNavPay }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+          <div style="{{ navPay }}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/></svg><span style="font-size:11px;font-weight:700;margin-top:3px;display:block;text-align:center">결제</span></div>
+        </button>
+        <button onClick="{{ onNavMy }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+          <div style="{{ navMy }}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span style="font-size:11px;font-weight:700;margin-top:3px;display:block;text-align:center">마이</span></div>
+        </button>
+      </div>
+
+      <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#0B2A46;opacity:.28;z-index:20"></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 460, &quot;height&quot;: 900 },
+  &quot;sessionActive&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;홈 구성&quot; },
+  &quot;showTimeSale&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;홈 구성&quot; },
+  &quot;autoRefresh&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;베이 현황&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    total: 7200,
+    remaining: 2064,
+    elapsed: 5136,
+    fee: 28000,
+    sale: 754,
+    nav: 'home',
+    refreshing: false,
+    toast: '',
+    statuses: { 1:'inuse',2:'avail',3:'reserved',4:'maint',5:'avail',6:'reserved',7:'inuse',8:'avail',9:'inuse',10:'avail',11:'reserved',12:'avail' },
+  };
+
+  componentDidMount() {
+    this.tick = 0;
+    this.timer = setInterval(() => {
+      this.tick++;
+      this.setState(s => ({
+        remaining: Math.max(0, s.remaining - 1),
+        elapsed: s.elapsed + 1,
+        sale: Math.max(0, s.sale - 1),
+      }));
+      if ((this.props.autoRefresh ?? true) && this.tick % 8 === 0) this.jitterBays();
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this._toast); }
+
+  jitterBays() {
+    this.setState(s => {
+      const st = { ...s.statuses };
+      const ns = [1,2,3,4,5,6,7,8,9,10,11,12].filter(n => st[n] === 'avail' || st[n] === 'inuse');
+      const pick = ns[Math.floor(Math.random() * ns.length)];
+      if (pick) st[pick] = st[pick] === 'avail' ? 'inuse' : 'avail';
+      return { statuses: st };
+    });
+  }
+
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._toast);
+    this._toast = setTimeout(() => this.setState({ toast: '' }), 2300);
+  }
+
+  hms(sec) {
+    sec = Math.max(0, sec | 0);
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const mm = String(m).padStart(2, '0'), ss = String(s).padStart(2, '0');
+    return h > 0 ? h + ':' + mm + ':' + ss : mm + ':' + ss;
+  }
+
+  cellStyle(st) {
+    const base = 'display:flex;align-items:center;justify-content:center;height:46px;border-radius:12px;font-weight:800;font-size:15px;transition:all .3s ease;';
+    const map = {
+      avail: 'background:#E7F8EF;color:#0E9F62;border:1px solid #C6EED8;',
+      inuse: 'background:#E9F0FE;color:#2563EB;border:1px solid #CFE0FC;',
+      reserved: 'background:#EFF2F6;color:#64748B;border:1px solid #E2E8F0;',
+      maint: 'background:#FDECEC;color:#DC2626;border:1px solid #F7CFCF;',
+    };
+    return base + (map[st] || map.reserved);
+  }
+
+  navStyle(k) {
+    return 'display:flex;flex-direction:column;align-items:center;color:' + (this.state.nav === k ? '#0E9F62' : '#9AA6B4') + ';transition:color .2s';
+  }
+
+  renderVals() {
+    const s = this.state;
+    const sessionActive = this.props.sessionActive ?? true;
+    const showTimeSale = this.props.showTimeSale ?? true;
+    const circ = 2 * Math.PI * 54;
+    const frac = s.total > 0 ? s.remaining / s.total : 0;
+    const bays = [1,2,3,4,5,6,7,8,9,10,11,12].map(n => ({ n, style: this.cellStyle(s.statuses[n]) }));
+    const availCount = bays.filter(b => s.statuses[b.n] === 'avail').length;
+    const d = new Date();
+
+    return {
+      statusTime: d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'),
+      storeName: '강남 세곡점',
+      greetingName: '김영차',
+      notifCount: 3,
+      sessionActive,
+      noSession: !sessionActive,
+      showTimeSale,
+      sesBay: 3,
+      sesService: '프리미엄 세차',
+      remainLabel: this.hms(s.remaining),
+      elapsedLabel: this.hms(s.elapsed),
+      feeLabel: s.fee.toLocaleString() + '원',
+      ringCirc: circ,
+      ringOffset: circ * (1 - frac),
+      salePct: '10%',
+      saleCountLabel: this.hms(s.sale),
+      bays,
+      availCount,
+      totalBays: 12,
+      spinStyle: s.refreshing ? 'animation:spin .7s linear infinite' : '',
+      toastMsg: s.toast,
+      toastStyle: 'position:absolute;left:50%;bottom:108px;transform:translateX(-50%) translateY(' + (s.toast ? '0' : '12px') + ');max-width:88%;background:#0B2A46;color:#fff;padding:12px 18px;border-radius:14px;font-size:13.5px;font-weight:600;box-shadow:0 12px 30px -8px rgba(11,42,70,.5);opacity:' + (s.toast ? '1' : '0') + ';pointer-events:none;transition:all .3s ease;z-index:30;text-align:center;line-height:1.4',
+      navHome: this.navStyle('home'),
+      navBay: this.navStyle('bay'),
+      navSale: this.navStyle('sale'),
+      navPay: this.navStyle('pay'),
+      navMy: this.navStyle('my'),
+
+      onExtend: () => { this.setState(s => ({ remaining: s.remaining + 600, total: s.total + 600, fee: s.fee + 3000 })); this.flash('시간이 10분 연장되었어요 · +3,000원'); },
+      onPay: () => this.flash('결제가 완료되었습니다 · ' + this.state.fee.toLocaleString() + '원'),
+      onScan: () => this.flash('베이의 QR·NFC를 태그해 세차를 시작하세요'),
+      onSale: () => this.flash('오프피크 타임세일 10% 할인이 적용돼요'),
+      onReserve: () => this.flash('가까운 빈 베이를 예약했어요'),
+      onHistory: () => this.flash('이용내역 화면은 곧 만나요'),
+      onStore: () => this.flash('매장 선택 화면은 곧 만나요'),
+      onBell: () => this.flash('새 알림 ' + 3 + '건이 있어요'),
+      onRefresh: () => { this.setState({ refreshing: true }); this.jitterBays(); setTimeout(() => { this.setState({ refreshing: false }); this.flash('베이 현황을 새로고침했어요'); }, 700); },
+      onNavHome: () => this.setState({ nav: 'home' }),
+      onNavBay: () => { this.setState({ nav: 'bay' }); this.flash('베이 화면은 곧 만나요'); },
+      onNavSale: () => { this.setState({ nav: 'sale' }); this.flash('타임세일 화면은 곧 만나요'); },
+      onNavPay: () => { this.setState({ nav: 'pay' }); this.flash('결제 화면은 곧 만나요'); },
+      onNavMy: () => { this.setState({ nav: 'my' }); this.flash('마이 화면은 곧 만나요'); },
+    };
+  }
+}
+</script>
+</body>
+</html>

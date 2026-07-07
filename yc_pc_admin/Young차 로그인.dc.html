@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#05B8CE;text-decoration:none}
+  a:hover{color:#0398AB}
+  input:focus{outline:none}
+  input::placeholder{color:#AEB8C4}
+  @keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+</style>
+</helmet>
+<div style="position:relative;display:flex;min-height:100vh;width:100%;background:url('assets/login_bg.jpg') center calc(50% + 20px) / cover no-repeat;overflow:hidden">
+
+  <!-- BRAND BLOCK -->
+  <div style="position:absolute;top:54px;left:193px;max-width:640px;z-index:1">
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:40px">
+      <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block"><g clip-path="url(#yclip)"><path d="M26.559 0H5.44102C2.43603 0 0 2.43603 0 5.44102V26.559C0 29.564 2.43603 32 5.44102 32H26.559C29.564 32 32 29.564 32 26.559V5.44102C32 2.43603 29.564 0 26.559 0Z" fill="url(#ygrad)"></path><path d="M12.0784 8.79099C11.6643 8.2954 11.0935 7.95664 10.4599 7.82699L7.05976 7.13693C6.15013 6.95292 5.52071 8.02147 6.12295 8.72616L12.9044 16.664C13.2619 17.0822 13.4585 17.6154 13.4585 18.1654V25.5323C13.4585 26.0488 14.0649 26.3269 14.456 25.9923L17.0531 23.7695C17.5612 23.3345 17.854 22.6988 17.854 22.0297V17.584C17.854 16.3377 17.4128 15.1312 16.6119 14.1776L12.0784 8.79308V8.79099Z" fill="white"></path><path d="M25.328 7.56566L22.8041 7.76641C22.1098 7.79359 20.8426 9.32636 20.3972 9.8575L17.5889 13.0234C17.2752 13.4918 17.6181 14.1212 18.1827 14.1066L20.2592 14.0564C21.0475 14.0376 21.7899 13.6842 22.3001 13.082L25.9323 8.80986C26.3568 8.308 25.9825 7.54057 25.3259 7.56566H25.328Z" fill="white"></path></g><defs><linearGradient id="ygrad" x1="3.02163" y1="9.73613" x2="31.8411" y2="23.6461" gradientUnits="userSpaceOnUse"><stop stop-color="#05B8CE"></stop><stop offset="0.67" stop-color="#24D7CB"></stop><stop offset="1" stop-color="#26D4A3"></stop></linearGradient><clipPath id="yclip"><rect width="32" height="32" fill="white"></rect></clipPath></defs></svg>
+      <span style="font-size:25px;font-weight:800;color:#1F3350;letter-spacing:-.5px">Young차</span>
+    </div>
+    <h1 style="font-size:42px;font-weight:800;line-height:1.28;color:#1B2E49;letter-spacing:-1px;margin-bottom:20px">손세차러의 필수앱<br>내손내차 영차 <span style="color:#17B98F">관리자시스템</span></h1>
+    <p style="font-size:17px;line-height:1.6;color:#5B6B7E;font-weight:500">세차장 운영 현황, 베이 상태, 타임세일, 결제 관리를<br>한눈에 관리하는 통합 관리 시스템입니다.</p>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div style="position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:flex-end;padding:32px 270px 32px 40px">
+    <div style="width:100%;max-width:560px;background:#fff;border-radius:26px;box-shadow:0 40px 90px -40px rgba(15,54,102,.4);padding:52px 56px">
+      <p style="font-size:16px;color:#64748B;font-weight:500;margin-bottom:30px">광명 스마트데이터보드에 오신 것을 환영합니다.</p>
+
+      <label style="display:block;font-size:15px;font-weight:700;color:#1F2C3D;margin-bottom:9px">아이디</label>
+      <input type="text" value="{{ id }}" onInput="{{ onId }}" onKeyDown="{{ onKey }}" placeholder="아이디를 입력하세요" style="width:100%;height:56px;border:1.5px solid #E2E8F0;border-radius:13px;padding:0 18px;font-size:15px;color:#1F2C3D;font-family:inherit;background:#fff;transition:border-color .15s" style-focus="border-color:#24D7CB">
+
+      <label style="display:block;font-size:15px;font-weight:700;color:#1F2C3D;margin:22px 0 9px">비밀번호</label>
+      <div style="position:relative">
+        <input type="{{ pwType }}" value="{{ pw }}" onInput="{{ onPw }}" onKeyDown="{{ onKey }}" placeholder="비밀번호를 입력하세요" style="width:100%;height:56px;border:1.5px solid #E2E8F0;border-radius:13px;padding:0 52px 0 18px;font-size:15px;color:#1F2C3D;font-family:inherit;background:#fff;transition:border-color .15s" style-focus="border-color:#24D7CB">
+        <button onClick="{{ onToggleShow }}" type="button" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:#94A3B8" style-hover="color:#475569">
+          <sc-if value="{{ showPw }}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></sc-if>
+          <sc-if value="{{ hidePw }}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><path d="M6.7 6.7C4 8.3 2 12 2 12s3.5 7 10 7c2 0 3.7-.5 5.2-1.3"/><path d="M9.9 5.2A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.6 3.4"/><path d="M9.5 9.5a3 3 0 0 0 4.2 4.2"/></svg></sc-if>
+        </button>
+      </div>
+
+      <label onClick="{{ onToggleRemember }}" style="display:flex;align-items:center;gap:9px;margin-top:18px;cursor:pointer;user-select:none">
+        <span style="{{ checkStyle }}"><sc-if value="{{ remember }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-11"/></svg></sc-if></span>
+        <span style="font-size:14.5px;color:#475569;font-weight:500;white-space:nowrap">아이디 저장</span>
+      </label>
+
+      <div style="{{ errStyle }}">{{ error }}</div>
+
+      <button onClick="{{ onLogin }}" style="width:100%;height:58px;margin-top:20px;border:none;border-radius:14px;background:linear-gradient(90deg,#26D0C6,#17B98F);color:#fff;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 14px 28px -12px rgba(23,185,143,.6);transition:filter .15s" style-hover="filter:brightness(1.05)">로그인</button>
+
+      <div style="display:flex;align-items:center;gap:14px;margin:26px 0">
+        <span style="flex:1;height:1px;background:#E7ECF2"></span>
+        <span style="font-size:13px;color:#94A3B8;font-weight:500">또는</span>
+        <span style="flex:1;height:1px;background:#E7ECF2"></span>
+      </div>
+
+      <button onClick="{{ onKakao }}" style="width:100%;height:54px;border:none;border-radius:13px;background:#FEE500;color:#3C1E1E;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:11px" style-hover="filter:brightness(.97)">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="#3C1E1E"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.9 1.9 5.4 4.8 6.8-.2.7-.8 2.7-.9 3.1 0 0 0 .3.2.4.2.1.4 0 .4 0 .5-.1 3-2 3.5-2.4.6.1 1.3.1 2 .1 5.5 0 10-3.6 10-8S17.5 3 12 3Z"/></svg>
+        카카오 로그인
+      </button>
+      <button onClick="{{ onNaver }}" style="width:100%;height:54px;border:none;border-radius:13px;background:#03C75A;color:#fff;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px" style-hover="filter:brightness(.97)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M4 4h5.2l5.3 8V4H20v16h-5.2L9.5 12v8H4V4Z"/></svg>
+        네이버 로그인
+      </button>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:30px">
+        <a href="#" onClick="{{ onFindId }}" style="font-size:14px;color:#64748B;font-weight:600" style-hover="color:#05B8CE">아이디 찾기</a>
+        <span style="width:1px;height:12px;background:#D5DCE5"></span>
+        <a href="#" onClick="{{ onFindPw }}" style="font-size:14px;color:#64748B;font-weight:600" style-hover="color:#05B8CE">비밀번호 찾기</a>
+        <span style="width:1px;height:12px;background:#D5DCE5"></span>
+        <a href="#" onClick="{{ onJoin }}" style="font-size:14px;color:#64748B;font-weight:600" style-hover="color:#05B8CE">회원가입</a>
+      </div>
+
+      <button onClick="{{ onFillTest }}" title="클릭하면 자동 입력됩니다" style="width:100%;margin-top:20px;background:none;border:none;padding:6px 0;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;color:#8A97A6;font-size:13.5px" style-hover="color:#5B6B7E">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span>테스트 계정 · 아이디 <b style="color:#1F2C3D">admin</b> / 비밀번호 <b style="color:#1F2C3D">1234</b></span>
+      </button>
+    </div>
+  </div>
+
+  <div style="{{ toastStyle }}">{{ toast }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
+}">
+class Component extends DCLogic {
+  state = { id: '', pw: '', showPw: false, remember: false, error: '', toast: '' };
+  ACCOUNT = { id: 'admin', pw: '1234' };
+
+  componentDidMount() {
+    try {
+      const saved = localStorage.getItem('yc_login_id');
+      if (saved) this.setState({ id: saved, remember: true });
+    } catch (e) {}
+  }
+  componentWillUnmount() { clearTimeout(this._tt); }
+
+  flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+
+  login() {
+    const { id, pw, remember } = this.state;
+    if (id.trim() === this.ACCOUNT.id && pw === this.ACCOUNT.pw) {
+      try {
+        if (remember) localStorage.setItem('yc_login_id', id.trim());
+        else localStorage.removeItem('yc_login_id');
+        localStorage.setItem('yc_auth', '1');
+      } catch (e) {}
+      this.setState({ error: '' });
+      window.location.href = 'Young차 관리자 대시보드.dc.html';
+    } else {
+      this.setState({ error: '아이디 또는 비밀번호가 올바르지 않습니다. (admin / 1234)' });
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    return {
+      id: s.id, pw: s.pw,
+      pwType: s.showPw ? 'text' : 'password',
+      showPw: s.showPw, hidePw: !s.showPw,
+      remember: s.remember,
+      onId: e => this.setState({ id: e.target.value, error: '' }),
+      onPw: e => this.setState({ pw: e.target.value, error: '' }),
+      onKey: e => { if (e.key === 'Enter') this.login(); },
+      onToggleShow: () => this.setState(st => ({ showPw: !st.showPw })),
+      onToggleRemember: () => this.setState(st => ({ remember: !st.remember })),
+      checkStyle: `width:22px;height:22px;border-radius:6px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:all .15s;border:1.5px solid ${s.remember ? '#17B98F' : '#CBD5E1'};background:${s.remember ? '#17B98F' : '#fff'}`,
+      error: s.error,
+      errStyle: `overflow:hidden;transition:all .2s;font-size:13.5px;font-weight:600;color:#E5484D;${s.error ? 'max-height:40px;margin-top:14px;animation:shake .4s' : 'max-height:0;margin-top:0'}`,
+      onLogin: () => this.login(),
+      onKakao: () => this.flash('카카오 간편 로그인은 준비 중입니다'),
+      onNaver: () => this.flash('네이버 간편 로그인은 준비 중입니다'),
+      onFindId: () => this.flash('아이디 찾기는 준비 중입니다'),
+      onFindPw: () => this.flash('비밀번호 찾기는 준비 중입니다'),
+      onJoin: () => this.flash('회원가입은 준비 중입니다'),
+      onFillTest: () => this.setState({ id: this.ACCOUNT.id, pw: this.ACCOUNT.pw, error: '' }),
+      toast: s.toast,
+      toastStyle: `position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(${s.toast ? '0' : '14px'});background:#0B2A46;color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 16px 40px -10px rgba(11,42,70,.5);opacity:${s.toast ? '1' : '0'};pointer-events:none;transition:all .3s ease;z-index:100`,
+    };
+  }
+}
+</script>
+</body>
+</html>

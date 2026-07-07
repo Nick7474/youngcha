@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#F4F6F9}
+  a{color:#05B8CE;text-decoration:none}
+  a:hover{color:#0398AB}
+  [data-noscroll]{scrollbar-width:thin;scrollbar-color:#D5DCE5 transparent}
+  [data-noscroll]::-webkit-scrollbar{width:8px;height:8px}
+  [data-noscroll]::-webkit-scrollbar-thumb{background:#D5DCE5;border-radius:4px}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes scanline{0%{top:0}100%{top:100%}}
+  @keyframes flicker{0%,100%{opacity:.9}50%{opacity:1}}
+  input:focus,select:focus{outline:none}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
+  <div style="{{ sidebarWrapStyle }}">
+    <dc-import name="AdminSidebar" active="ai" collapsed="{{ collapsed }}" style="width:100%;height:100%" hint-size="240px,100%"></dc-import>
+  </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <dc-import name="AdminTopbar" title="비전 AI 모니터링" style="display:block;width:100%" hint-size="100%,74px"></dc-import>
+    <div data-noscroll style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- STATUS STRIP -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:16px 18px;display:flex;align-items:center;gap:13px">
+          <span style="width:40px;height:40px;border-radius:12px;background:#E4FAF3;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#0FA588" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 8h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3l1.5-2h3Z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+          <div><div style="font-size:22px;font-weight:800;color:#0B2A46;line-height:1">10 <span style="font-size:14px;color:#94A3B8">/ 12</span></div><div style="font-size:12.5px;color:#64748B;font-weight:600;margin-top:3px">카메라 온라인</div></div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:16px 18px;display:flex;align-items:center;gap:13px">
+          <span style="width:40px;height:40px;border-radius:12px;background:#E6FAFB;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#05B8CE" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+          <div><div style="font-size:22px;font-weight:800;color:#0B2A46;line-height:1;font-variant-numeric:tabular-nums">{{ detectToday }}</div><div style="font-size:12.5px;color:#64748B;font-weight:600;margin-top:3px">오늘 차량 인식</div></div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:16px 18px;display:flex;align-items:center;gap:13px">
+          <span style="width:40px;height:40px;border-radius:12px;background:#E9F0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+          <div><div style="font-size:22px;font-weight:800;color:#0B2A46;line-height:1">98.6<span style="font-size:14px">%</span></div><div style="font-size:12.5px;color:#64748B;font-weight:600;margin-top:3px">번호판 인식 정확도</div></div>
+        </div>
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:16px 18px;display:flex;align-items:center;gap:13px">
+          <span style="width:40px;height:40px;border-radius:12px;background:#FEF3E2;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5"/><path d="M12 17h.01"/></svg></span>
+          <div><div style="font-size:22px;font-weight:800;color:#0B2A46;line-height:1">2<span style="font-size:14px;color:#94A3B8">건</span></div><div style="font-size:12.5px;color:#64748B;font-weight:600;margin-top:3px">이상 이벤트</div></div>
+        </div>
+      </div>
+
+      <!-- MAIN: live view + camera grid -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);gap:18px;align-items:start">
+        <!-- LIVE VIEW -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:16px;font-weight:800;color:#0B2A46">라이브 뷰 · {{ liveTitle }}</span>
+              <span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:#fff;background:#EF4444;padding:3px 9px;border-radius:8px"><span style="width:5px;height:5px;border-radius:50%;background:#fff;animation:livedot 1.2s ease-in-out infinite"></span>REC</span>
+            </div>
+            <span style="font-size:12.5px;color:#94A3B8;font-weight:600;font-variant-numeric:tabular-nums">{{ liveClock }}</span>
+          </div>
+          <!-- camera canvas -->
+          <div style="position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#1A2A38,#0B1720)">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);animation:flicker 3s ease-in-out infinite"></div>
+            <!-- floor perspective -->
+            <div style="position:absolute;left:8%;right:8%;bottom:0;height:62%;background:linear-gradient(180deg,rgba(80,110,130,.15),rgba(40,60,75,.35));clip-path:polygon(28% 0,72% 0,100% 100%,0 100%)"></div>
+            <div style="position:absolute;left:50%;top:38%;bottom:0;width:2px;background:repeating-linear-gradient(180deg,rgba(255,220,90,.55) 0 14px,transparent 14px 28px);transform:translateX(-50%)"></div>
+            <!-- detected car -->
+            <div style="position:absolute;left:50%;top:52%;transform:translateX(-50%);color:#7FE9DC;opacity:.9"><svg width="150" height="86" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></div>
+            <!-- bbox -->
+            <div style="position:absolute;left:33%;top:46%;width:34%;height:34%;border:2px solid #24D7CB;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.4)">
+              <span style="position:absolute;top:-24px;left:-2px;background:#24D7CB;color:#04322F;font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px;white-space:nowrap">차량 98% · 12가 3456</span>
+              <span style="position:absolute;top:-2px;left:-2px;width:12px;height:12px;border-top:3px solid #24D7CB;border-left:3px solid #24D7CB"></span>
+              <span style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-bottom:3px solid #24D7CB;border-right:3px solid #24D7CB"></span>
+            </div>
+            <!-- scanline -->
+            <div style="position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(36,215,203,.7),transparent);animation:scanline 3.4s linear infinite"></div>
+            <!-- HUD -->
+            <div style="position:absolute;top:12px;left:14px;display:flex;align-items:center;gap:7px;color:#9FE9E1;font-size:12px;font-weight:700;letter-spacing:.3px"><span style="width:7px;height:7px;border-radius:50%;background:#20E3B2;box-shadow:0 0 8px #20E3B2"></span>AI DETECTION ON</div>
+            <div style="position:absolute;top:12px;right:14px;color:rgba(255,255,255,.65);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums">{{ liveFps }} FPS</div>
+            <div style="position:absolute;bottom:12px;left:14px;color:rgba(255,255,255,.8);font-size:12px;font-weight:700">CAM-{{ liveCamId }} · 1920×1080</div>
+            <div style="position:absolute;bottom:12px;right:14px;display:flex;gap:7px">
+              <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+            </div>
+          </div>
+          <!-- inference bars -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px">
+            <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:11px 13px"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:3px">차종</div><div style="font-size:14px;font-weight:800;color:#0B2A46">세단</div></div>
+            <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:11px 13px"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:3px">색상</div><div style="font-size:14px;font-weight:800;color:#0B2A46">화이트</div></div>
+            <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:11px 13px"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:3px">번호판</div><div style="font-size:14px;font-weight:800;color:#0B2A46">12가 3456</div></div>
+            <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:11px 13px"><div style="font-size:11.5px;color:#94A3B8;font-weight:600;margin-bottom:3px">신뢰도</div><div style="font-size:14px;font-weight:800;color:#0FA588">98.2%</div></div>
+          </div>
+        </div>
+
+        <!-- CAMERA GRID -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <span style="font-size:16px;font-weight:800;color:#0B2A46">카메라 (베이별)</span>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px">
+              <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#20C79E"></span>정상</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#3B82F6"></span>감지 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:7px;height:7px;border-radius:50%;background:#94A3B8"></span>오프라인</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <sc-for list="{{ cams }}" as="cam" hint-placeholder-count="12">
+              <button onClick="{{ cam.onSelect }}" style="{{ cam.wrapStyle }}">
+                <div style="position:absolute;inset:0;{{ cam.bgStyle }}"></div>
+                <div style="position:absolute;left:5%;bottom:0;right:5%;height:52%;background:rgba(255,255,255,.05);clip-path:polygon(26% 0,74% 0,100% 100%,0 100%)"></div>
+                <sc-if value="{{ cam.hasCar }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute;left:50%;top:48%;transform:translateX(-50%);color:{{ cam.carColor }}"><svg width="52" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+                </sc-if>
+                <sc-if value="{{ cam.offline }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.35)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20M6.7 6.7A2 2 0 0 0 4 9v6a2 2 0 0 0 2 2h9M15 8h3a2 2 0 0 1 2 2v6"/></svg></span>
+                </sc-if>
+                <span style="position:absolute;top:6px;left:7px;font-size:10.5px;font-weight:800;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.5)">{{ cam.label }}</span>
+                <span style="{{ cam.dotStyle }}"></span>
+                <span style="{{ cam.tagStyle }}">{{ cam.tag }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETECTION LOG + MODEL HEALTH -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start">
+        <!-- log -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:800;color:#0B2A46">실시간 감지 로그</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#05B8CE;background:#E6FAFB;padding:3px 8px;border-radius:9px"><span style="width:5px;height:5px;border-radius:50%;background:#05B8CE;animation:livedot 1.4s ease-in-out infinite"></span>LIVE</span></div>
+            <a href="#" style="font-size:13px;font-weight:600;color:#94A3B8">전체 로그</a>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ logs }}" as="log" hint-placeholder-count="6">
+              <div onClick="{{ log.onClick }}" style="display:flex;align-items:center;gap:13px;padding:11px 0;border-bottom:1px solid #F3F6F9;cursor:pointer" style-hover="background:#FAFBFD">
+                <span style="{{ log.iconStyle }}"><span style="{{ log.iconInner }}"></span></span>
+                <div style="flex:1;min-width:0"><div style="font-size:14px;color:#334155;font-weight:600">{{ log.text }}</div><div style="font-size:12px;color:#94A3B8;margin-top:1px">{{ log.sub }}</div></div>
+                <span style="{{ log.tagStyle }}">{{ log.tag }}</span>
+                <span style="font-size:12.5px;color:#94A3B8;font-variant-numeric:tabular-nums;flex:0 0 auto">{{ log.time }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- model health -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:18px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <span style="font-size:16px;font-weight:800;color:#0B2A46">AI 모델 상태</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#0FA588;background:#E4FAF3;padding:4px 10px;border-radius:9px"><span style="width:6px;height:6px;border-radius:50%;background:#20C79E"></span>정상 가동</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">추론 지연 (Latency)</span><span style="font-weight:800;color:#0B2A46;font-variant-numeric:tabular-nums">{{ latency }}ms</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="{{ latencyBar }}"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">GPU 사용률</span><span style="font-weight:800;color:#0B2A46;font-variant-numeric:tabular-nums">{{ gpu }}%</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="{{ gpuBar }}"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#475569;font-weight:600">평균 신뢰도</span><span style="font-weight:800;color:#0B2A46">96.4%</span></div>
+              <div style="height:8px;border-radius:4px;background:#F1F4F8;overflow:hidden"><div style="width:96%;height:100%;border-radius:4px;background:linear-gradient(90deg,#24D7CB,#05B8CE)"></div></div>
+            </div>
+          </div>
+          <div style="border-top:1px solid #F1F4F8;margin-top:16px;padding-top:14px;display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#64748B">모델 버전</span><span style="font-weight:700;color:#334155">YC-Vision v2.4.1</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#64748B">마지막 업데이트</span><span style="font-weight:600;color:#334155">2025.06.14</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#64748B">엣지 디바이스</span><span style="font-weight:600;color:#334155">Jetson Orin ×2</span></div>
+          </div>
+          <button onClick="{{ onDiag }}" style="width:100%;margin-top:16px;height:44px;border-radius:12px;border:1.5px solid #E1E7EF;background:#fff;color:#475569;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px" style-hover="color:#05B8CE"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/><path d="M16 3h5v5"/></svg>진단 실행</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <dc-import name="AdminDrawer" open="{{ drawerOpen }}" eyebrow="카메라 상세" title="{{ dTitle }}" subtitle="{{ dSubtitle }}" avatar-path-d="{{ dAvatarPath }}" avatar-bg1="{{ dBg1 }}" avatar-bg2="{{ dBg2 }}" badge="{{ dBadge }}" blocks="{{ dBlocks }}" actions="{{ dActions }}" on-close="{{ onCloseDrawer }}" style="position:fixed;left:0;top:0;width:0;height:0;z-index:88" hint-size="0px,0px"></dc-import>
+  <div style="{{ toastStyle }}">{{ toast }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
+}">
+class Component extends DCLogic {
+  state = { collapsed: false, t: 0, selectedCam: 1, drawerOpen: false, toast: '' };
+  CAMS = { 1:'inuse',2:'ok',3:'ok',4:'offline',5:'ok',6:'ok',7:'inuse',8:'ok',9:'inuse',10:'ok',11:'ok',12:'ok' };
+  CAMINFO = {
+    1:{ plate:'12가 3456', type:'세단', color:'화이트', conf:'98.2%' },
+    7:{ plate:'23가 8901', type:'세단', color:'그레이', conf:'97.4%' },
+    9:{ plate:'88바 1234', type:'SUV', color:'블랙', conf:'96.1%' },
+  };
+  CAMLOG = {
+    1:[{title:'차량 진입 감지 · 12가 3456',time:'14:34:02',tone:'good'},{title:'번호판 인식 완료',time:'14:34:05'}],
+    4:[{title:'카메라 오프라인 감지',time:'14:28:03',tone:'danger'},{title:'연결 재시도 중',time:'14:28:10',done:false}],
+    7:[{title:'번호판 인식 완료 · 23가 8901',time:'14:30:20'}],
+    9:[{title:'번호판 인식 완료 · 88바 1234',time:'14:33:41'}],
+  };
+  LOGS = [
+    { text:'차량 진입 감지 · 12가 3456', sub:'CAM-01 · 세단 / 화이트', tag:'입차', tone:'in', time:'14:34:02', camN:1 },
+    { text:'번호판 인식 완료 · 88바 1234', sub:'CAM-09 · SUV / 블랙', tag:'인식', tone:'ok', time:'14:33:41', camN:9 },
+    { text:'차량 퇴장 감지 · 45다 2211', sub:'CAM-02 · 세단 / 실버', tag:'출차', tone:'out', time:'14:33:12', camN:2 },
+    { text:'저조도 경고 · 인식률 저하 가능', sub:'CAM-11 · 조명 점검 권장', tag:'경고', tone:'warn', time:'14:31:55', camN:11 },
+    { text:'번호판 인식 완료 · 23가 8901', sub:'CAM-07 · 세단 / 그레이', tag:'인식', tone:'ok', time:'14:30:20', camN:7 },
+    { text:'카메라 오프라인 감지', sub:'CAM-04 · 연결 재시도 중', tag:'오류', tone:'err', time:'14:28:03', camN:4 },
+  ];
+
+  componentDidMount() {
+    try { this.setState({ collapsed: localStorage.getItem('yc_sidebar_collapsed') === '1' }); } catch (e) {}
+    this.timer = setInterval(() => this.setState(s => ({ t: s.t + 1 })), 1000);
+    this._onToggle = () => this.setState(s => { const v = !s.collapsed; try { localStorage.setItem('yc_sidebar_collapsed', v ? '1' : '0'); } catch (e) {} return { collapsed: v }; });
+    window.addEventListener('yc:sidebar-toggle', this._onToggle);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this._tt); window.removeEventListener('yc:sidebar-toggle', this._onToggle); }
+  flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+
+  buildDrawer(n) {
+    const st = this.CAMS[n], info = this.CAMINFO[n], t = this.state.t;
+    const pad = String(n).padStart(2, '0');
+    const detecting = st === 'inuse', offline = st === 'offline';
+    const badge = detecting ? { text:'감지 중', bg:'#E9F0FE', fg:'#2563EB' } : (offline ? { text:'오프라인', bg:'#EFF2F6', fg:'#64748B' } : { text:'정상', bg:'#E4FAF3', fg:'#0FA588' });
+    const blocks = [], actions = [];
+    if (offline) {
+      blocks.push({ type:'note', tone:'danger', text:'카메라가 오프라인 상태입니다. 연결을 재시도하거나 현장 점검이 필요합니다.' });
+      blocks.push({ type:'rows', heading:'연결 정보', items:[
+        { label:'IP 주소', value:'192.168.0.' + (100 + n) },
+        { label:'마지막 응답', value:'14:28:03' },
+        { label:'재시도 횟수', value:'3회', color:'danger' },
+      ]});
+      actions.push({ text:'재연결 시도', kind:'warn', onClick:() => this.flash(`CAM-${pad} 재연결을 시도합니다`) });
+    } else {
+      blocks.push({ type:'cam', tag: detecting ? (info.plate + ' 인식') : '탐지 대기', label:`CAM-${pad} · 1920×1080` });
+      if (detecting) {
+        blocks.push({ type:'cards', cols:2, heading:'인식 결과', items:[
+          { top:'차종', mid:info.type }, { top:'색상', mid:info.color },
+          { top:'번호판', mid:info.plate }, { top:'신뢰도', mid:info.conf, color:'good' },
+        ]});
+      } else {
+        blocks.push({ type:'note', tone:'info', text:'현재 이 베이에 차량이 없습니다. AI가 진입을 감지 대기 중입니다.' });
+      }
+      blocks.push({ type:'rows', heading:'AI 정보', items:[
+        { label:'모델', value:'YC-Vision v2.4.1' },
+        { label:'프레임레이트', value:'30 FPS' },
+        { label:'추론 지연', value:(24 + (t % 6)) + 'ms' },
+        { label:'가동 시간', value:'14일 6시간' },
+      ]});
+    }
+    const lg = this.CAMLOG[n] || [{ title:'최근 이벤트 없음', time:'-', done:false }];
+    blocks.push({ type:'timeline', heading:'최근 이벤트', items: lg });
+    actions.push({ text:'스냅샷 저장', kind:'ghost', onClick:() => this.flash(`CAM-${pad} 스냅샷을 저장했습니다`) });
+    if (!offline) actions.push({ text:'진단 실행', kind:'primary', onClick:() => this.flash(`CAM-${pad} 진단을 시작했습니다`) });
+    return { title:`CAM-${pad}`, subtitle:`베이 ${n} · 실시간`, badge, blocks, actions,
+      path:'M15 8h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3l1.5-2h3z',
+      bg1: detecting ? '#3B82F6' : (offline ? '#94A3B8' : '#24D7CB'), bg2: detecting ? '#2563EB' : (offline ? '#64748B' : '#05B8CE') };
+  }
+
+  renderVals() {
+    const s = this.state, t = s.t;
+    const camMeta = { ok:{ dot:'#20C79E' }, inuse:{ dot:'#3B82F6' }, offline:{ dot:'#94A3B8' } };
+    const cams = Array.from({ length: 12 }, (_, i) => {
+      const n = i + 1, st = this.CAMS[n], sel = s.selectedCam === n, off = st === 'offline', car = st === 'inuse';
+      const tagMap = { ok:{ text:'정상', bg:'rgba(32,199,158,.9)', fg:'#04322A' }, inuse:{ text:'감지', bg:'rgba(59,130,246,.9)', fg:'#fff' }, offline:{ text:'오프라인', bg:'rgba(148,163,184,.85)', fg:'#1F2937' } };
+      const tg = tagMap[st];
+      return {
+        label: 'CAM-' + String(n).padStart(2, '0'),
+        wrapStyle: `position:relative;aspect-ratio:16/11;border-radius:11px;overflow:hidden;cursor:pointer;border:2px solid ${sel ? '#24D7CB' : 'transparent'};box-shadow:${sel ? '0 0 0 3px rgba(36,215,203,.25)' : 'none'};padding:0;transition:all .15s`,
+        bgStyle: off ? 'background:#1A2129' : 'background:linear-gradient(160deg,#1E3040,#0C1922)',
+        hasCar: car, offline: off, carColor: '#7FE9DC',
+        dotStyle: `position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:${camMeta[st].dot};box-shadow:0 0 6px ${camMeta[st].dot}` + (car ? ';animation:livedot 1.3s ease-in-out infinite' : ''),
+        tagStyle: `position:absolute;bottom:6px;right:7px;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:6px;background:${tg.bg};color:${tg.fg}`,
+        tag: tg.text,
+        onSelect: () => { this.setState({ selectedCam: n, drawerOpen: true }); },
+      };
+    });
+
+    const toneMap = {
+      in:{ bg:'#E4FAF3', dot:'#0FA588', tagBg:'#E4FAF3', tagFg:'#0FA588' },
+      out:{ bg:'#EFF2F6', dot:'#64748B', tagBg:'#EFF2F6', tagFg:'#64748B' },
+      ok:{ bg:'#E6FAFB', dot:'#05B8CE', tagBg:'#E6FAFB', tagFg:'#0398AB' },
+      warn:{ bg:'#FEF3E2', dot:'#F59E0B', tagBg:'#FEF3E2', tagFg:'#D97706' },
+      err:{ bg:'#FDECEC', dot:'#EF4444', tagBg:'#FDECEC', tagFg:'#DC2626' },
+    };
+    const logs = this.LOGS.map(l => {
+      const c = toneMap[l.tone];
+      return {
+        ...l,
+        onClick: () => this.setState({ selectedCam: l.camN || 1, drawerOpen: true }),
+        iconStyle: `width:34px;height:34px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:${c.bg}`,
+        iconInner: `width:11px;height:11px;border-radius:50%;background:${c.dot};display:block`,
+        tagStyle: `font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:8px;background:${c.tagBg};color:${c.tagFg};flex:0 0 auto`,
+      };
+    });
+
+    const latency = 24 + (t % 6), gpu = 61 + (t % 7);
+    const now = new Date(); const p = n => String(n).padStart(2, '0');
+    const selPad = String(s.selectedCam).padStart(2, '0');
+    const dd = this.buildDrawer(s.selectedCam);
+
+    return {
+      collapsed: s.collapsed,
+      sidebarWrapStyle: `flex:0 0 ${s.collapsed ? 74 : 240}px;height:100%;position:relative;z-index:30;transition:flex-basis .25s ease`,
+      detectToday: (128 + Math.floor(t / 20)).toLocaleString(),
+      liveTitle: `CAM-${selPad} (베이 ${s.selectedCam})`,
+      liveCamId: selPad,
+      liveClock: `${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`,
+      liveFps: 30,
+      cams, logs,
+      latency, latencyBar: `width:${Math.min(100, latency * 1.6)}%;height:100%;border-radius:4px;background:linear-gradient(90deg,#24D7CB,#05B8CE);transition:width .6s ease`,
+      gpu, gpuBar: `width:${gpu}%;height:100%;border-radius:4px;background:#3B82F6;transition:width .6s ease`,
+      onDiag: () => this.flash('전체 카메라 진단을 시작했습니다 · 예상 30초'),
+      drawerOpen: s.drawerOpen,
+      dTitle: dd.title, dSubtitle: dd.subtitle, dBadge: dd.badge, dBlocks: dd.blocks, dActions: dd.actions, dAvatarPath: dd.path, dBg1: dd.bg1, dBg2: dd.bg2,
+      onCloseDrawer: () => this.setState({ drawerOpen: false }),
+      toast: s.toast,
+      toastStyle: `position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(${s.toast ? '0' : '14px'});background:#0B2A46;color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 16px 40px -10px rgba(11,42,70,.5);opacity:${s.toast ? '1' : '0'};pointer-events:none;transition:all .3s ease;z-index:100`,
+    };
+  }
+}
+</script>
+</body>
+</html>
