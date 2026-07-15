@@ -18,6 +18,36 @@
   [data-noscroll]::-webkit-scrollbar{width:8px}
   [data-noscroll]::-webkit-scrollbar-thumb{background:#D5DCE5;border-radius:4px}
   @keyframes livedot{0%,100%{opacity:1}50%{opacity:.3}}
+  /* ===== Bay Card Design System (공통) ===== */
+  .bay-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid #EEF2F7;border-radius:16px;box-shadow:0 2px 8px rgba(15,25,35,.05);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .bay-card__number{font-size:16px;font-weight:800;color:#0F1923;line-height:1}
+  .bay-card__icon{display:flex;line-height:0}
+  .bay-card__icon svg{fill:none;stroke-width:1.7}
+  .bay-card__time{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+  .bay-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .bay-badge__dot{width:6px;height:6px;border-radius:50%}
+  .bay-card--available{background:rgba(36,215,203,.06);border-color:rgba(36,215,203,.45)}
+  .bay-card--available .bay-card__icon svg{stroke:#24D7CB}
+  .bay-card--available .bay-card__time{color:#0FA588}
+  .bay-card--inuse{background:#F8FAFC;border-color:#EDF1F5}
+  .bay-card--inuse .bay-card__icon svg{stroke:#9AA3B0}
+  .bay-card--inuse .bay-card__time{color:#64748B}
+  .bay-card--repair{background:rgba(240,68,56,.05);border-color:rgba(240,68,56,.28)}
+  .bay-card--repair .bay-card__icon svg{stroke:#F04438}
+  .bay-card--repair .bay-card__time{color:#E5342A}
+  .bay-badge--available{background:rgba(36,215,203,.12);color:#0FA588}
+  .bay-badge--available .bay-badge__dot{background:#24D7CB}
+  .bay-badge--inuse{background:rgba(154,163,176,.16);color:#6B7684}
+  .bay-badge--inuse .bay-badge__dot{background:#9AA3B0}
+  .bay-badge--repair{background:rgba(240,68,56,.10);color:#E5342A}
+  .bay-badge--repair .bay-badge__dot{background:#F04438}
+  .bay-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--selected{border-color:#24D7CB;box-shadow:0 0 0 3px rgba(36,215,203,.20)}
+  .bay-card--selected:hover{box-shadow:0 0 0 3px rgba(36,215,203,.20),0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--compact{padding:13px 6px 12px;gap:7px}
+  .bay-card--compact .bay-card__icon svg{width:32px;height:32px}
+  .bay-card--detail{padding:16px 8px 13px}
+  .bay-card--detail .bay-card__icon svg{width:36px;height:36px}
 </style>
 </helmet>
 <div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
@@ -43,15 +73,15 @@
             <span style="width:38px;height:38px;border-radius:11px;background:#E9F0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"></path><circle cx="8" cy="15.5" r="1.2"></circle><circle cx="16" cy="15.5" r="1.2"></circle></svg></span>
             <span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">현재 사용 중 베이</span>
           </div>
-          <div style="font-size:25px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">7 <span style="font-size:17px;color:#94A3B8">/ 12</span></div>
-          <div style="font-size:12.5px;color:#94A3B8;font-weight:500;margin-top:5px">58.3% 사용 중</div>
+          <div style="font-size:25px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">2 <span style="font-size:17px;color:#94A3B8">/ 6</span></div>
+          <div style="font-size:12.5px;color:#94A3B8;font-weight:500;margin-top:5px">33.3% 사용 중</div>
         </div>
         <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:17px 18px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
             <span style="width:38px;height:38px;border-radius:11px;background:#E4FAF3;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0FA588" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.4 2.4 4.6-5"></path></svg></span>
             <span style="font-size:13.5px;color:#64748B;font-weight:600;white-space:nowrap">사용 가능 베이</span>
           </div>
-          <div style="font-size:25px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">5<span style="font-size:16px;color:#94A3B8">개</span></div>
+          <div style="font-size:25px;font-weight:800;color:#0B2A46;letter-spacing:-.5px">3<span style="font-size:16px;color:#94A3B8">개</span></div>
           <div style="font-size:12.5px;color:#0FA588;font-weight:700;margin-top:5px">즉시 이용 가능</div>
         </div>
         <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:17px 18px">
@@ -89,11 +119,9 @@
               <span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#05B8CE;background:#E6FAFB;padding:3px 8px;border-radius:9px"><span style="width:5px;height:5px;border-radius:50%;background:#05B8CE;animation:livedot 1.4s ease-in-out infinite"></span>LIVE</span>
             </div>
             <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px">
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#20C79E"></span>사용 가능</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#3B82F6"></span>사용 중</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#94A3B8"></span>예약됨</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#F59E0B"></span>점검 중</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#EF4444"></span>수리 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#24D7CB"></span>사용 가능</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#9AA3B0"></span>사용 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B"><span style="width:8px;height:8px;border-radius:3px;background:#F04438"></span>수리 중</span>
             </div>
           </div>
           <div style="display:flex;align-items:stretch;gap:12px">
@@ -101,11 +129,11 @@
               <span style="font-size:12px;font-weight:700;color:#94A3B8;writing-mode:vertical-rl">입&nbsp;구</span>
             </div>
             <div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:10px">
-              <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="12">
-                <div onClick="{{ bay.onSelect }}" style="{{ bay.tileStyle }}">
-                  <span style="font-size:16px;font-weight:800;color:#0B2A46">{{ bay.n }}</span>
-                  <span style="{{ bay.carStyle }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v4h-2v-1.5H7V17H5z"></path><circle cx="8" cy="15.5" r="1.2"></circle><circle cx="16" cy="15.5" r="1.2"></circle></svg></span>
-                  <span style="{{ bay.pillStyle }}">{{ bay.pillText }}</span>
+              <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="6">
+                <div onClick="{{ bay.onSelect }}" class="{{ bay.cardClass }}">
+                  <span class="bay-card__number">{{ bay.n }}</span>
+                  <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v4h-2v-1.5H7V17H5z"></path><circle cx="8" cy="15.5" r="1.2"></circle><circle cx="16" cy="15.5" r="1.2"></circle></svg></span>
+                  <span class="bay-badge {{ bay.badgeClass }}"><span class="bay-badge__dot"></span>{{ bay.pillText }}</span>
                 </div>
               </sc-for>
             </div>
@@ -128,7 +156,7 @@
             </div>
             <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F3F6F9">
               <span style="width:34px;height:34px;border-radius:10px;background:#E9F0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg></span>
-              <span style="flex:1;font-size:14px;color:#334155;font-weight:500">7번 베이 결제 완료</span>
+              <span style="flex:1;font-size:14px;color:#334155;font-weight:500">5번 베이 결제 완료</span>
               <span style="font-size:12.5px;color:#94A3B8;font-variant-numeric:tabular-nums">14:33</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F3F6F9">
@@ -249,14 +277,10 @@
 }">
 class Component extends DCLogic {
   state = { mounted: false, selectedBay: 1, collapsed: false, drawerOpen: false };
-  STATUSES = { 1:'inuse',2:'avail',3:'reserved',4:'repair',5:'avail',6:'reserved',7:'inuse',8:'avail',9:'inuse',10:'avail',11:'reserved',12:'avail' };
+  STATUSES = { 1:'inuse',2:'avail',3:'avail',4:'repair',5:'inuse',6:'avail' };
   DATA = {
     1:{cust:'김영수',plate:'12가 3456',service:'프리미엄 세차',remain:'00:34',fee:'28,000원'},
-    3:{cust:'이민호',plate:'34나 5678',service:'스팀 세차',resv:'예약 15:00'},
-    7:{cust:'최지원',plate:'23가 8901',service:'기본 세차',remain:'00:15',fee:'20,000원'},
-    9:{cust:'정우성',plate:'88바 1234',service:'프리미엄 세차',remain:'00:11',fee:'38,000원'},
-    6:{cust:'박준호',plate:'56더 7890',service:'실내 세차',resv:'예약 16:00'},
-    11:{cust:'한지민',plate:'22바 5344',service:'하부 세차',resv:'예약 17:00'},
+    5:{cust:'최지원',plate:'23가 8901',service:'기본 세차',remain:'00:15',fee:'20,000원'},
   };
   componentDidMount() {
     try { this.setState({ collapsed: localStorage.getItem('yc_sidebar_collapsed') === '1' }); } catch (e) {}
@@ -268,18 +292,16 @@ class Component extends DCLogic {
 
   statusMeta(st) {
     const m = {
-      avail: { car: '#20C79E', bg: '#E4FAF3', fg: '#0FA588', text: '사용 가능' },
-      inuse: { car: '#3B82F6', bg: '#E9F0FE', fg: '#2563EB', text: '사용 중' },
-      reserved: { car: '#94A3B8', bg: '#EFF2F6', fg: '#64748B', text: '예약됨' },
-      repair: { car: '#EF4444', bg: '#FDECEC', fg: '#DC2626', text: '수리 중' },
-      maint: { car: '#F59E0B', bg: '#FEF3E2', fg: '#D97706', text: '점검 중' },
+      avail: { car: '#24D7CB', bg: 'rgba(36,215,203,.12)', fg: '#0FA588', text: '사용 가능' },
+      inuse: { car: '#9AA3B0', bg: 'rgba(154,163,176,.16)', fg: '#6B7684', text: '사용 중' },
+      repair: { car: '#F04438', bg: 'rgba(240,68,56,.10)', fg: '#E5342A', text: '수리 중' },
     };
-    return m[st] || m.reserved;
+    return m[st] || m.avail;
   }
 
   buildDrawer(n) {
     const st = this.STATUSES[n], meta = this.statusMeta(st), d = this.DATA[n] || {};
-    const inuse = st === 'inuse', reserved = st === 'reserved';
+    const inuse = st === 'inuse';
     const blocks = [], actions = [];
     if (inuse) {
       blocks.push({ type:'rows', heading:'이용 정보', items:[
@@ -287,31 +309,26 @@ class Component extends DCLogic {
         { label:'서비스', value:d.service }, { label:'남은 시간', value:d.remain, color:'blue' },
         { label:'현재 요금', value:d.fee, color:'accent', strong:true },
       ]});
-    } else if (reserved) {
-      blocks.push({ type:'rows', heading:'예약 정보', items:[
-        { label:'예약 고객', value:d.cust }, { label:'차량번호', value:d.plate },
-        { label:'예약 서비스', value:d.service }, { label:'예약 시간', value:d.resv, color:'violet' },
-      ]});
     } else {
-      const tone = st === 'avail' ? 'good' : (st === 'maint' ? 'warn' : 'danger');
-      const txt = st === 'avail' ? '이 베이는 비어 있어 즉시 배정 가능합니다.' : (st === 'maint' ? '점검이 진행 중인 베이입니다.' : '수리 접수된 베이입니다. 장비 점검이 필요합니다.');
+      const tone = st === 'avail' ? 'good' : 'danger';
+      const txt = st === 'avail' ? '이 베이는 비어 있어 즉시 이용 가능합니다.' : '수리 접수된 베이입니다. 장비 점검이 필요합니다.';
       blocks.push({ type:'note', tone, text: txt });
     }
     actions.push({ text:'베이 관리에서 열기', kind:'primary', onClick:() => { window.location.href = 'Young차 베이 관리.dc.html'; } });
-    return { title:`${n}번 베이`, subtitle:`1F · 베이 ${n}`, avatar:String(n), badge:{ text:meta.text, bg:meta.bg, fg:meta.fg }, blocks, actions };
+    return { title:`${n}번 베이`, subtitle:`베이 ${n}`, avatar:String(n), badge:{ text:meta.text, bg:meta.bg, fg:meta.fg }, blocks, actions };
   }
 
   renderVals() {
     const s = this.state, m = s.mounted;
     const statuses = this.STATUSES;
-    const bays = [1,2,3,4,5,6,7,8,9,10,11,12].map(n => {
-      const meta = this.statusMeta(statuses[n]);
+    const bays = [1,2,3,4,5,6].map(n => {
+      const st = statuses[n], meta = this.statusMeta(st);
+      const mod = st === 'avail' ? 'available' : st;
       const sel = s.selectedBay === n;
       return {
         n,
-        tileStyle: `display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px 12px;border-radius:14px;background:#F8FAFC;border:1.5px solid ${sel ? '#24D7CB' : '#EEF2F7'};box-shadow:${sel ? '0 0 0 3px rgba(36,215,203,.18)' : 'none'};cursor:pointer;transition:all .15s`,
-        carStyle: `color:${meta.car};display:flex`,
-        pillStyle: `font-size:12px;font-weight:700;padding:3px 11px;border-radius:9px;background:${meta.bg};color:${meta.fg}`,
+        cardClass: `bay-card bay-card--compact bay-card--${mod}${sel ? ' bay-card--selected' : ''}`,
+        badgeClass: `bay-badge--${mod}`,
         pillText: meta.text,
         onSelect: () => this.setState({ selectedBay: n, drawerOpen: true }),
       };

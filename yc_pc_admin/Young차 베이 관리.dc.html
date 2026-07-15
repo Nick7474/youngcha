@@ -20,6 +20,36 @@
   @keyframes livedot{0%,100%{opacity:1}50%{opacity:.3}}
   input:focus{outline:none}
   select:focus{outline:none}
+  /* ===== Bay Card Design System (공통) ===== */
+  .bay-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid #EEF2F7;border-radius:16px;box-shadow:0 2px 8px rgba(15,25,35,.05);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .bay-card__number{font-size:16px;font-weight:800;color:#0F1923;line-height:1}
+  .bay-card__icon{display:flex;line-height:0}
+  .bay-card__icon svg{fill:none;stroke-width:1.7}
+  .bay-card__time{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+  .bay-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .bay-badge__dot{width:6px;height:6px;border-radius:50%}
+  .bay-card--available{background:rgba(36,215,203,.06);border-color:rgba(36,215,203,.45)}
+  .bay-card--available .bay-card__icon svg{stroke:#24D7CB}
+  .bay-card--available .bay-card__time{color:#0FA588}
+  .bay-card--inuse{background:#F8FAFC;border-color:#EDF1F5}
+  .bay-card--inuse .bay-card__icon svg{stroke:#9AA3B0}
+  .bay-card--inuse .bay-card__time{color:#64748B}
+  .bay-card--repair{background:rgba(240,68,56,.05);border-color:rgba(240,68,56,.28)}
+  .bay-card--repair .bay-card__icon svg{stroke:#F04438}
+  .bay-card--repair .bay-card__time{color:#E5342A}
+  .bay-badge--available{background:rgba(36,215,203,.12);color:#0FA588}
+  .bay-badge--available .bay-badge__dot{background:#24D7CB}
+  .bay-badge--inuse{background:rgba(154,163,176,.16);color:#6B7684}
+  .bay-badge--inuse .bay-badge__dot{background:#9AA3B0}
+  .bay-badge--repair{background:rgba(240,68,56,.10);color:#E5342A}
+  .bay-badge--repair .bay-badge__dot{background:#F04438}
+  .bay-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--selected{border-color:#24D7CB;box-shadow:0 0 0 3px rgba(36,215,203,.20)}
+  .bay-card--selected:hover{box-shadow:0 0 0 3px rgba(36,215,203,.20),0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--compact{padding:13px 6px 12px;gap:7px}
+  .bay-card--compact .bay-card__icon svg{width:32px;height:32px}
+  .bay-card--detail{padding:16px 8px 13px}
+  .bay-card--detail .bay-card__icon svg{width:36px;height:36px}
 </style>
 </helmet>
 <div style="display:flex;height:100vh;overflow:hidden;background:#F4F6F9">
@@ -36,38 +66,26 @@
           <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
             <span style="font-size:17px;font-weight:800;color:#0B2A46;white-space:nowrap">{{ floorTitle }}</span>
             <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px">
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#20C79E"></span>사용 가능</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#3B82F6"></span>사용 중</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#94A3B8"></span>예약됨</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#F59E0B"></span>점검 중</span>
-              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#EF4444"></span>수리 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#24D7CB"></span>사용 가능</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#9AA3B0"></span>사용 중</span>
+              <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;white-space:nowrap"><span style="width:8px;height:8px;border-radius:3px;background:#F04438"></span>수리 중</span>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="display:flex;background:#F1F4F8;border-radius:10px;padding:3px">
-              <button onClick="{{ onFloor1 }}" style="{{ floor1Style }}">1F</button>
-              <button onClick="{{ onFloor2 }}" style="{{ floor2Style }}">2F</button>
-            </div>
-            <button onClick="{{ onViewAll }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E7ECF2;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:#475569;cursor:pointer" style-hover="color:#05B8CE">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
-              전체 보기
-            </button>
-          </div>
+          <span style="font-size:13px;font-weight:600;color:#94A3B8;white-space:nowrap">총 6개 베이</span>
         </div>
 
-        <sc-if value="{{ is1F }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;align-items:stretch;gap:14px;background:linear-gradient(180deg,#FAFBFD,#F4F7FB);border:1.5px dashed #E1E7EF;border-radius:16px;padding:18px 14px">
           <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;color:#94A3B8">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             <span style="font-size:12px;font-weight:800;writing-mode:vertical-rl">입&nbsp;구</span>
           </div>
-          <div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
-            <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="12">
-              <div onClick="{{ bay.onSelect }}" style="{{ bay.tileStyle }}">
-                <span style="font-size:16px;font-weight:800;color:#0B2A46">{{ bay.n }}</span>
-                <span style="{{ bay.carStyle }}"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
-                <span style="{{ bay.pillStyle }}">{{ bay.pillText }}</span>
-                <span style="{{ bay.subStyle }}">{{ bay.sub }}</span>
+          <div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:14px">
+            <sc-for list="{{ bays }}" as="bay" hint-placeholder-count="6">
+              <div onClick="{{ bay.onSelect }}" class="{{ bay.cardClass }}">
+                <span class="bay-card__number">{{ bay.n }}</span>
+                <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+                <span class="bay-badge {{ bay.badgeClass }}"><span class="bay-badge__dot"></span>{{ bay.pillText }}</span>
+                <span class="bay-card__time">{{ bay.sub }}</span>
               </div>
             </sc-for>
           </div>
@@ -76,14 +94,6 @@
             <span style="font-size:12px;font-weight:800;writing-mode:vertical-rl">출&nbsp;구</span>
           </div>
         </div>
-        </sc-if>
-        <sc-if value="{{ is2F }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#FAFBFD;border:1.5px dashed #E1E7EF;border-radius:16px;padding:60px 20px;color:#94A3B8">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-          <span style="font-size:15px;font-weight:700;color:#64748B">2층 베이 데이터 준비 중</span>
-          <span style="font-size:13px">2층 확장 오픈 예정입니다.</span>
-        </div>
-        </sc-if>
       </div>
 
       <!-- BAY LIST TABLE -->
@@ -95,8 +105,6 @@
               <option value="all">전체 상태</option>
               <option value="avail">사용 가능</option>
               <option value="inuse">사용 중</option>
-              <option value="reserved">예약됨</option>
-              <option value="maint">점검 중</option>
               <option value="repair">수리 중</option>
             </select>
             <div style="display:flex;align-items:center;gap:7px;background:#F1F4F8;border:1px solid #E7ECF2;border-radius:10px;padding:9px 12px;width:240px">
@@ -120,10 +128,10 @@
               </tr>
             </thead>
             <tbody>
-              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
                 <tr style="{{ r.rowStyle }}" onClick="{{ r.onDetail }}">
                   <td style="padding:13px 12px;font-size:14px;font-weight:700;color:#0B2A46">{{ r.n }}</td>
-                  <td style="padding:13px 12px"><span style="{{ r.statusPillStyle }}">{{ r.statusText }}</span></td>
+                  <td style="padding:13px 12px"><span class="bay-badge {{ r.badgeClass }}"><span class="bay-badge__dot"></span>{{ r.statusText }}</span></td>
                   <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.cust }}</td>
                   <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.plate }}</td>
                   <td style="padding:13px 12px;font-size:14px;color:#475569">{{ r.service }}</td>
@@ -133,7 +141,6 @@
                     <div style="display:flex;gap:6px;justify-content:flex-end">
                       <button onClick="{{ r.onDetail }}" style="background:#fff;border:1px solid #E1E7EF;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:600;color:#475569;cursor:pointer;white-space:nowrap" style-hover="color:#05B8CE">상세 보기</button>
                       <sc-if value="{{ r.isInuse }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onEnd }}" style="background:#EEF4FF;border:1px solid #D3E1FD;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;color:#2563EB;cursor:pointer;white-space:nowrap">이용 종료</button></sc-if>
-                      <sc-if value="{{ r.isReserved }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onCancel }}" style="background:#FFF3F3;border:1px solid #FBD5D5;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;color:#DC2626;cursor:pointer;white-space:nowrap">예약 취소</button></sc-if>
                     </div>
                   </td>
                 </tr>
@@ -154,16 +161,12 @@
   &quot;$preview&quot;: { &quot;width&quot;: 1600, &quot;height&quot;: 940 }
 }">
 class Component extends DCLogic {
-  state = { t: 0, selectedBay: 1, drawerOpen: false, collapsed: false, floor: '1F', query: '', filter: 'all', override: {}, toast: '' };
-  BASE = { 1:'inuse',2:'avail',3:'reserved',4:'repair',5:'avail',6:'reserved',7:'inuse',8:'avail',9:'inuse',10:'maint',11:'reserved',12:'avail' };
+  state = { t: 0, selectedBay: 1, drawerOpen: false, collapsed: false, query: '', filter: 'all', override: {}, toast: '' };
+  BASE = { 1:'inuse',2:'avail',3:'avail',4:'repair',5:'inuse',6:'avail' };
   DATA = {
     1:{cust:'김영수',phone:'010-1234-5678',plate:'12가 3456',model:'현대 · 쏘나타 DN8',color:'화이트',service:'프리미엄 세차',start:'2025.06.20 13:10',useBase:5136,remBase:2064,fee:'28,000원',nfc:'NFC-1F-0001'},
-    3:{cust:'이민호',phone:'010-3456-1212',plate:'34나 5678',service:'스팀 세차',start:'2025.06.20 15:00',resv:'예약 15:00',nfc:'NFC-1F-0003'},
-    6:{cust:'박준호',phone:'010-5678-4444',plate:'56더 7890',service:'실내 세차',start:'2025.06.20 16:00',resv:'예약 16:00',nfc:'NFC-1F-0006'},
-    7:{cust:'최지원',phone:'010-2222-3333',plate:'23가 8901',model:'기아 · K5',color:'그레이',service:'기본 세차',start:'2025.06.20 13:47',useBase:2892,remBase:900,fee:'20,000원',nfc:'NFC-1F-0007'},
-    9:{cust:'정우성',phone:'010-4444-5555',plate:'88바 1234',model:'제네시스 · G80',color:'블랙',service:'프리미엄 세차',start:'2025.06.20 13:20',useBase:3918,remBase:660,fee:'38,000원',nfc:'NFC-1F-0009'},
-    10:{maintBase:1365,nfc:'NFC-1F-0010'},
-    11:{cust:'한지민',phone:'010-7777-8888',plate:'22바 5344',service:'하부 세차',start:'2025.06.20 17:00',resv:'예약 17:00',nfc:'NFC-1F-0011'},
+    4:{repairBase:1365,nfc:'NFC-1F-0004'},
+    5:{cust:'최지원',phone:'010-2222-3333',plate:'23가 8901',model:'기아 · K5',color:'그레이',service:'기본 세차',start:'2025.06.20 13:47',useBase:2892,remBase:900,fee:'20,000원',nfc:'NFC-1F-0005'},
   };
 
   componentDidMount() {
@@ -177,13 +180,11 @@ class Component extends DCLogic {
   eff(n) { return this.state.override[n] || this.BASE[n]; }
   statusMeta(st) {
     const m = {
-      avail: { car:'#20C79E', bg:'#E4FAF3', fg:'#0FA588', text:'사용 가능' },
-      inuse: { car:'#3B82F6', bg:'#E9F0FE', fg:'#2563EB', text:'사용 중' },
-      reserved: { car:'#94A3B8', bg:'#EFF2F6', fg:'#64748B', text:'예약됨' },
-      repair: { car:'#EF4444', bg:'#FDECEC', fg:'#DC2626', text:'수리 중' },
-      maint: { car:'#F59E0B', bg:'#FEF3E2', fg:'#D97706', text:'점검 중' },
+      avail: { car:'#24D7CB', bg:'rgba(36,215,203,.12)', fg:'#0FA588', text:'사용 가능' },
+      inuse: { car:'#9AA3B0', bg:'rgba(154,163,176,.16)', fg:'#6B7684', text:'사용 중' },
+      repair: { car:'#F04438', bg:'rgba(240,68,56,.10)', fg:'#E5342A', text:'수리 중' },
     };
-    return m[st] || m.reserved;
+    return m[st] || m.avail;
   }
   hms(sec) { sec = Math.max(0, sec | 0); const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60; const p = n => String(n).padStart(2,'0'); return `${p(h)}:${p(m)}:${p(s)}`; }
   flash(m) { this.setState({ toast: m }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
@@ -192,7 +193,7 @@ class Component extends DCLogic {
 
   buildDrawer(n) {
     const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {}, t = this.state.t;
-    const inuse = st === 'inuse', reserved = st === 'reserved';
+    const inuse = st === 'inuse';
     const blocks = [], actions = [];
     if (inuse) {
       blocks.push({ type:'cards', cols:2, items:[
@@ -207,41 +208,28 @@ class Component extends DCLogic {
         { label:'현재 요금', value:d.fee, color:'accent', strong:true },
       ]});
       blocks.push({ type:'qr', title:'QR·NFC 연결', sub:d.nfc, status:'세션 연결됨' });
-      actions.push({ text:'상태 변경', kind:'blue', onClick:() => this.flash('상태 변경 패널은 준비 중입니다') });
       actions.push({ text:'이용 종료', kind:'danger', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 이용을 종료했습니다`) });
-      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
-    } else if (reserved) {
-      blocks.push({ type:'rows', heading:'예약 정보', items:[
-        { label:'예약 고객', value:d.cust },
-        { label:'연락처', value:d.phone, color:'default' },
-        { label:'차량번호', value:d.plate, color:'default' },
-        { label:'예약 서비스', value:d.service },
-        { label:'예약 시간', value:d.resv || d.start, color:'violet' },
-      ]});
-      blocks.push({ type:'qr', title:'QR·NFC 연결', sub:d.nfc, status:'예약 연결됨' });
-      actions.push({ text:'예약 취소', kind:'danger', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 예약을 취소했습니다`) });
-      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
+      actions.push({ text:'수리 등록', kind:'warn', onClick:() => this.setStatus(n, 'repair', `${n}번 베이를 수리 상태로 등록했습니다`) });
     } else if (st === 'avail') {
-      blocks.push({ type:'note', tone:'good', text:'이 베이는 비어 있어 즉시 배정 가능합니다. 고객이 QR·NFC를 태그하면 세션이 시작됩니다.' });
+      blocks.push({ type:'note', tone:'good', text:'이 베이는 비어 있어 즉시 이용 가능합니다. 고객이 QR·NFC를 태그하면 세션이 시작됩니다.' });
       blocks.push({ type:'rows', heading:'설비 상태', items:[
         { label:'QR·NFC 태그', value:d.nfc || '정상', color:'good' },
         { label:'수압·세제', value:'정상', color:'good' },
         { label:'마지막 세션', value:'12:30 종료', color:'default' },
       ]});
-      actions.push({ text:'점검 등록', kind:'warn', onClick:() => this.setStatus(n, 'maint', `${n}번 베이를 점검 상태로 등록했습니다`) });
+      actions.push({ text:'수리 등록', kind:'warn', onClick:() => this.setStatus(n, 'repair', `${n}번 베이를 수리 상태로 등록했습니다`) });
     } else {
-      const maint = st === 'maint';
-      blocks.push({ type:'note', tone: maint ? 'warn' : 'danger', text: maint ? '점검이 진행 중인 베이입니다. 완료 후 운영을 재개하세요.' : '수리 접수된 베이입니다. 장비 점검이 필요합니다.' });
-      blocks.push({ type:'rows', heading: maint ? '점검 정보' : '수리 정보', items:[
-        { label:'상태', value: meta.text, color: maint ? 'warn' : 'danger' },
-        { label:'경과 시간', value: this.hms((d.maintBase || 0) + t) },
+      blocks.push({ type:'note', tone:'danger', text:'수리 접수된 베이입니다. 장비 점검이 필요합니다.' });
+      blocks.push({ type:'rows', heading:'수리 정보', items:[
+        { label:'상태', value: meta.text, color:'danger' },
+        { label:'경과 시간', value: this.hms((d.repairBase || 0) + t) },
         { label:'담당', value:'현장 매니저' },
       ]});
       actions.push({ text:'운영 재개', kind:'primary', onClick:() => this.setStatus(n, 'avail', `${n}번 베이 운영을 재개했습니다`) });
     }
     return {
       title: `${n}번 베이`,
-      subtitle: `1F · 베이 ${n}`,
+      subtitle: `베이 ${n}`,
       avatar: String(n),
       badge: { text: meta.text, bg: meta.bg, fg: meta.fg },
       blocks, actions,
@@ -250,21 +238,20 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state, t = s.t;
-    const nums = Array.from({ length: 12 }, (_, i) => i + 1);
+    const nums = Array.from({ length: 6 }, (_, i) => i + 1);
 
     const bays = nums.map(n => {
       const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {}, sel = s.selectedBay === n;
-      let sub = '-', subCol = '#CBD5E1';
-      if (st === 'inuse') { sub = this.hms(d.useBase + t); subCol = '#2563EB'; }
-      else if (st === 'reserved') { sub = d.resv || '예약'; subCol = '#64748B'; }
-      else if (st === 'maint') { sub = this.hms((d.maintBase || 0) + t); subCol = '#D97706'; }
+      const mod = st === 'avail' ? 'available' : st;
+      let sub = '-';
+      if (st === 'inuse') sub = this.hms(d.useBase + t);
+      else if (st === 'repair') sub = this.hms((d.repairBase || 0) + t);
       return {
         n,
-        tileStyle: `display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 8px 12px;border-radius:16px;background:#fff;border:1.5px solid ${sel ? '#24D7CB' : '#EAEEF3'};box-shadow:${sel ? '0 0 0 3px rgba(36,215,203,.18)' : '0 2px 8px rgba(15,40,70,.04)'};cursor:pointer;transition:all .15s`,
-        carStyle: `color:${meta.car};display:flex`,
-        pillStyle: `font-size:12px;font-weight:700;padding:3px 11px;border-radius:9px;background:${meta.bg};color:${meta.fg}`,
+        cardClass: `bay-card bay-card--detail bay-card--${mod}${sel ? ' bay-card--selected' : ''}`,
+        badgeClass: `bay-badge--${mod}`,
         pillText: meta.text,
-        sub, subStyle: `font-size:13px;font-weight:700;color:${subCol};font-variant-numeric:tabular-nums`,
+        sub,
         onSelect: () => this.open(n),
       };
     });
@@ -272,19 +259,18 @@ class Component extends DCLogic {
     const q = s.query.replace(/\s/g, '');
     const rows = nums.map(n => {
       const st = this.eff(n), meta = this.statusMeta(st), d = this.DATA[n] || {};
-      const inuse = st === 'inuse', reserved = st === 'reserved';
-      const remain = inuse ? this.hms(d.useBase + t) : (reserved ? '예약 대기' : '-');
+      const inuse = st === 'inuse';
+      const remain = inuse ? this.hms(d.useBase + t) : '-';
       return {
         n, _st: st,
         rowStyle: `border-bottom:1px solid #F3F6F9;cursor:pointer;transition:background .12s;${s.selectedBay === n && s.drawerOpen ? 'background:#F3FCFB' : ''}`,
-        statusPillStyle: `display:inline-flex;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:8px;background:${meta.bg};color:${meta.fg}`,
+        badgeClass: `bay-badge--${st === 'avail' ? 'available' : st}`,
         statusText: meta.text,
         cust: d.cust || '-', plate: d.plate || '-', service: d.service || '-', start: d.start || '-',
-        remain, remainStyle: `font-variant-numeric:tabular-nums;font-weight:${inuse ? 700 : 500};color:${inuse ? '#2563EB' : '#94A3B8'}`,
-        isInuse: inuse, isReserved: reserved,
+        remain, remainStyle: `font-variant-numeric:tabular-nums;font-weight:${inuse ? 700 : 500};color:${inuse ? '#0F1923' : '#94A3B8'}`,
+        isInuse: inuse,
         onDetail: () => this.open(n),
         onEnd: () => this.setStatus(n, 'avail', `${n}번 베이 이용을 종료했습니다`),
-        onCancel: () => this.setStatus(n, 'avail', `${n}번 베이 예약을 취소했습니다`),
       };
     }).filter(r => (s.filter === 'all' || r._st === s.filter) && (q === '' || String(r.n).includes(q) || r.cust.includes(s.query) || r.plate.replace(/\s/g, '').includes(q)));
 
@@ -293,13 +279,7 @@ class Component extends DCLogic {
     return {
       collapsed: s.collapsed,
       sidebarWrapStyle: `flex:0 0 ${s.collapsed ? 74 : 240}px;height:100%;position:relative;z-index:30;transition:flex-basis .25s ease`,
-      floorTitle: `베이 현황 (${s.floor})`,
-      is1F: s.floor === '1F', is2F: s.floor === '2F',
-      floor1Style: `border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;${s.floor === '1F' ? 'background:#fff;color:#0B2A46;box-shadow:0 1px 4px rgba(15,40,70,.1)' : 'background:transparent;color:#94A3B8'}`,
-      floor2Style: `border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;${s.floor === '2F' ? 'background:#fff;color:#0B2A46;box-shadow:0 1px 4px rgba(15,40,70,.1)' : 'background:transparent;color:#94A3B8'}`,
-      onFloor1: () => this.setState({ floor: '1F' }),
-      onFloor2: () => this.setState({ floor: '2F' }),
-      onViewAll: () => this.flash('전체 층 통합 뷰는 준비 중입니다'),
+      floorTitle: '베이 현황',
       bays, rows,
       query: s.query, filter: s.filter,
       onQuery: e => this.setState({ query: e.target.value }),

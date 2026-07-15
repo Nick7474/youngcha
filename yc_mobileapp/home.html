@@ -46,32 +46,30 @@
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--t2)}
 .legend-dot{width:10px;height:10px;border-radius:50%}
 
-/* 2D Bay Map */
+/* 2D Bay Map — 공통 Bay Card 스타일(admin 동일) · 모바일 스케일 유지 */
 .bay-map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.bay-slot{aspect-ratio:1/1.1;border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all var(--tm);position:relative;border:2px solid transparent}
-.bay-slot.available{background:var(--green-bg);border-color:var(--mint)}
-.bay-slot.available:hover{background:var(--mint);transform:scale(1.04);box-shadow:var(--sh-mint)}
-.bay-slot.available:hover .bay-num{color:#fff}
-.bay-slot.available:hover .bay-ico svg{stroke:#fff}
-.bay-slot.available:hover .bay-status-txt{color:rgba(255,255,255,.85)}
-.bay-slot.busy{background:var(--gray-bg);border-color:transparent;cursor:not-allowed;opacity:.7}
-.bay-slot.broken{background:var(--red-bg);border-color:rgba(240,68,56,.25);cursor:not-allowed}
-.bay-ico svg{width:28px;height:28px;stroke-width:1.5;fill:none;transition:stroke var(--tf)}
+.bay-slot{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;aspect-ratio:1/1.05;padding:10px 6px;border-radius:var(--r-md);background:#fff;border:1.5px solid var(--bg-div);box-shadow:0 2px 8px rgba(15,25,35,.05);transition:transform var(--tm),box-shadow var(--tm),border-color var(--tf)}
+.bay-slot .bay-num{font-family:var(--en);font-size:16px;font-weight:800;color:var(--t1);line-height:1}
+.bay-slot .bay-ico{display:flex;line-height:0}
+.bay-slot .bay-ico svg{width:28px;height:28px;fill:none;stroke-width:1.6;transition:stroke var(--tf)}
+.bay-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.bay-badge__dot{width:5px;height:5px;border-radius:50%}
+/* status: 사용 가능(민트) / 사용 중(회색) / 수리 중(빨강) */
+.bay-slot.available{background:rgba(36,215,203,.06);border-color:rgba(36,215,203,.45);cursor:pointer;animation:availPulse 2.2s ease-in-out infinite}
 .bay-slot.available .bay-ico svg{stroke:var(--mint)}
+.bay-slot.busy{background:var(--gray-bg);border-color:#EDF1F5;opacity:.85;cursor:not-allowed}
 .bay-slot.busy .bay-ico svg{stroke:var(--gray)}
+.bay-slot.broken{background:var(--red-bg);border-color:rgba(240,68,56,.28);cursor:not-allowed}
 .bay-slot.broken .bay-ico svg{stroke:var(--red)}
-.bay-num{font-family:var(--en);font-size:18px;font-weight:800;transition:color var(--tf)}
-.bay-slot.available .bay-num{color:var(--mint)}
-.bay-slot.busy .bay-num{color:var(--gray)}
-.bay-slot.broken .bay-num{color:var(--red)}
-.bay-status-txt{font-size:10px;font-weight:700;transition:color var(--tf)}
-.bay-slot.available .bay-status-txt{color:var(--mint)}
-.bay-slot.busy .bay-status-txt{color:var(--gray)}
-.bay-slot.broken .bay-status-txt{color:var(--red)}
-
-/* Available pulse ring */
-.bay-slot.available::after{content:'';position:absolute;inset:-4px;border-radius:calc(var(--r-md)+4px);border:2px solid var(--mint);opacity:0;animation:availPulse 2s ease infinite}
-@keyframes availPulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.35;transform:scale(1.03)}}
+.bay-badge.available{background:rgba(36,215,203,.12);color:#0FA588}
+.bay-badge.available .bay-badge__dot{background:var(--mint)}
+.bay-badge.busy{background:rgba(154,163,176,.16);color:#6B7684}
+.bay-badge.busy .bay-badge__dot{background:var(--gray)}
+.bay-badge.broken{background:rgba(240,68,56,.10);color:#E5342A}
+.bay-badge.broken .bay-badge__dot{background:var(--red)}
+.bay-slot.available:hover{animation:none;transform:translateY(-2px);box-shadow:var(--sh-mint);border-color:var(--mint)}
+/* 테두리에 딱 맞게 깜빡이는 링 (box-shadow는 border-radius를 그대로 따라감) */
+@keyframes availPulse{0%,100%{box-shadow:0 2px 8px rgba(15,25,35,.05),0 0 0 0 rgba(36,215,203,0)}50%{box-shadow:0 2px 8px rgba(15,25,35,.05),0 0 0 3px rgba(36,215,203,.32)}}
 
 .bay-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--bg-div)}
 .bay-stat{text-align:center}
@@ -380,6 +378,7 @@ const bays = [
   {num:6,status:'available'},
 ];
 
+// 상태 색상: 사용 가능(민트) / 사용 중(회색) / 수리 중(빨강) — admin과 동일한 베이 카드 스타일
 const statusLabel = {available:'사용 가능',busy:'사용 중',broken:'수리 중'};
 const statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg>`;
 
@@ -387,9 +386,9 @@ function renderBays(){
   const map = document.getElementById('bay-map');
   map.innerHTML = bays.map(b=>`
     <div class="bay-slot ${b.status}" onclick="${b.status==='available'?`openPayment(${b.num})`:''}">
-      <div class="bay-ico">${statusIcon}</div>
       <div class="bay-num">${b.num}</div>
-      <div class="bay-status-txt">${statusLabel[b.status]}</div>
+      <div class="bay-ico">${statusIcon}</div>
+      <div class="bay-badge ${b.status}"><span class="bay-badge__dot"></span>${statusLabel[b.status]}</div>
     </div>
   `).join('');
 }

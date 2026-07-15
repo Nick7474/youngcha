@@ -23,6 +23,38 @@
   .yds-nav-link{display:block;padding:7px 14px;border-radius:9px;font-size:13.5px;font-weight:600;color:#64748B;transition:background .15s,color .15s}
   .yds-nav-link:hover{background:#EAF9FA;color:#05B8CE}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+  /* ===== Bay Card Design System ===== */
+  .bay-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid #EEF2F7;border-radius:16px;box-shadow:0 2px 8px rgba(15,25,35,.05);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .bay-card__number{font-size:16px;font-weight:800;color:#0F1923;line-height:1}
+  .bay-card__icon{display:flex;line-height:0}
+  .bay-card__icon svg{fill:none;stroke-width:1.7}
+  .bay-card__time{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+  .bay-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .bay-badge__dot{width:6px;height:6px;border-radius:50%}
+  .bay-card--available{background:rgba(36,215,203,.06);border-color:rgba(36,215,203,.45)}
+  .bay-card--available .bay-card__icon svg{stroke:#24D7CB}
+  .bay-card--available .bay-card__time{color:#0FA588}
+  .bay-card--inuse{background:#F8FAFC;border-color:#EDF1F5}
+  .bay-card--inuse .bay-card__icon svg{stroke:#9AA3B0}
+  .bay-card--inuse .bay-card__time{color:#64748B}
+  .bay-card--repair{background:rgba(240,68,56,.05);border-color:rgba(240,68,56,.28)}
+  .bay-card--repair .bay-card__icon svg{stroke:#F04438}
+  .bay-card--repair .bay-card__time{color:#E5342A}
+  .bay-badge--available{background:rgba(36,215,203,.12);color:#0FA588}
+  .bay-badge--available .bay-badge__dot{background:#24D7CB}
+  .bay-badge--inuse{background:rgba(154,163,176,.16);color:#6B7684}
+  .bay-badge--inuse .bay-badge__dot{background:#9AA3B0}
+  .bay-badge--repair{background:rgba(240,68,56,.10);color:#E5342A}
+  .bay-badge--repair .bay-badge__dot{background:#F04438}
+  .bay-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--selected{border-color:#24D7CB;box-shadow:0 0 0 3px rgba(36,215,203,.20)}
+  .bay-card--selected:hover{box-shadow:0 0 0 3px rgba(36,215,203,.20),0 8px 20px rgba(15,40,70,.10)}
+  .bay-card--compact{padding:13px 6px 12px;gap:7px}
+  .bay-card--compact .bay-card__icon svg{width:32px;height:32px}
+  .bay-card--detail{padding:16px 8px 13px}
+  .bay-card--detail .bay-card__icon svg{width:36px;height:36px}
+  .bay-card--mobile{aspect-ratio:1/1.1;justify-content:center;gap:7px;padding:10px 6px}
+  .bay-card--mobile .bay-card__icon svg{width:28px;height:28px}
 </style>
 </helmet>
 <div style="display:flex;min-height:100vh">
@@ -53,6 +85,7 @@
       <a class="yds-nav-link" href="#badges">배지 · 칩</a>
       <a class="yds-nav-link" href="#forms">폼 · 입력</a>
       <a class="yds-nav-link" href="#cards">카드</a>
+      <a class="yds-nav-link" href="#bay-card">베이 카드</a>
       <a class="yds-nav-link" href="#list">리스트 · 로우</a>
       <a class="yds-nav-link" href="#data">데이터 · KPI · 테이블</a>
       <a class="yds-nav-link" href="#nav">내비게이션</a>
@@ -374,6 +407,81 @@
           <div style="background:#fff;border:1px solid #EEF2F7;border-radius:20px;padding:20px;box-shadow:0 2px 8px rgba(15,25,35,.06)"><div style="font-size:13.5px;font-weight:700;color:#0F1923;margin-bottom:6px">기본 카드</div><div style="font-size:12.5px;color:#64748B;line-height:1.6">sh-sm · radius 20px. 리스트/그리드 기본.</div></div>
           <div style="background:#fff;border:1px solid #EEF2F7;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(15,25,35,.08)"><div style="font-size:13.5px;font-weight:700;color:#0F1923;margin-bottom:6px">부양 카드</div><div style="font-size:12.5px;color:#64748B;line-height:1.6">sh-md. 주요 섹션 강조.</div></div>
           <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 32px rgba(15,25,35,.12)"><div style="font-size:13.5px;font-weight:700;color:#0F1923;margin-bottom:6px">오버레이 카드</div><div style="font-size:12.5px;color:#64748B;line-height:1.6">sh-lg. 모달·시트·드로어.</div></div>
+        </div>
+      </section>
+
+      <!-- ================= BAY CARD ================= -->
+      <section id="bay-card" style="margin-top:60px">
+        <div style="font-size:11px;font-weight:800;color:#05B8CE;letter-spacing:1px;margin-bottom:6px">COMPONENT</div>
+        <h2 style="font-size:27px;font-weight:800;color:#0F1923;letter-spacing:-.5px;margin-bottom:8px">베이 카드</h2>
+        <p style="font-size:14.5px;color:#64748B;line-height:1.65;max-width:720px;margin-bottom:24px">세차 베이 현황을 표시하는 공통 카드. <b>고객 앱 · 관리자 대시보드 · 관리자 베이 관리</b> 세 화면이 동일한 <code style="background:#EAF9FA;color:#05B8CE;padding:1px 6px;border-radius:5px;font-size:13px">.bay-card</code> 시스템을 사용합니다. 레이아웃(그리드·크기)은 화면 목적에 맞게 다르되, <b>상태 색상 · 아이콘 · 배지 · 카드 스타일 · 텍스트 규칙</b>은 항상 통일합니다.</p>
+
+        <!-- status demo -->
+        <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:24px">
+          <div style="font-size:13px;font-weight:800;color:#0F1923;margin-bottom:4px">상태 3종 · <span style="color:#94A3B8;font-weight:600">detail 변형</span></div>
+          <p style="font-size:12.5px;color:#94A3B8;margin-bottom:18px">예약 상태는 사용하지 않습니다. (영차 서비스 정책 — 즉시 결제·이용)</p>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,150px));gap:14px">
+            <div class="bay-card bay-card--detail bay-card--available">
+              <span class="bay-card__number">2</span>
+              <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+              <span class="bay-badge bay-badge--available"><span class="bay-badge__dot"></span>사용 가능</span>
+              <span class="bay-card__time">-</span>
+            </div>
+            <div class="bay-card bay-card--detail bay-card--inuse">
+              <span class="bay-card__number">1</span>
+              <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+              <span class="bay-badge bay-badge--inuse"><span class="bay-badge__dot"></span>사용 중</span>
+              <span class="bay-card__time">01:25:30</span>
+            </div>
+            <div class="bay-card bay-card--detail bay-card--repair">
+              <span class="bay-card__number">4</span>
+              <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+              <span class="bay-badge bay-badge--repair"><span class="bay-badge__dot"></span>수리 중</span>
+              <span class="bay-card__time">00:22:45</span>
+            </div>
+            <div class="bay-card bay-card--detail bay-card--available bay-card--selected">
+              <span class="bay-card__number">6</span>
+              <span class="bay-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.8A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.2L19 13v5h-2v-2H7v2H5z"/><circle cx="8" cy="15.5" r="1.2"/><circle cx="16" cy="15.5" r="1.2"/></svg></span>
+              <span class="bay-badge bay-badge--available"><span class="bay-badge__dot"></span>사용 가능</span>
+              <span class="bay-card__time" style="color:#0F1923;font-weight:700">선택됨</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- tokens + variants -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px">
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:22px">
+            <div style="font-size:13px;font-weight:800;color:#0F1923;margin-bottom:14px">상태 토큰</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:8px;background:#24D7CB"></span><div><div style="font-size:13px;font-weight:700;color:#0F1923">사용 가능 · available</div><div style="font-size:11.5px;color:#9AA3B0">아이콘·점 #24D7CB · 배지텍스트 #0FA588</div></div></div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:8px;background:#9AA3B0"></span><div><div style="font-size:13px;font-weight:700;color:#0F1923">사용 중 · inuse</div><div style="font-size:11.5px;color:#9AA3B0">아이콘·점 #9AA3B0 · 배지텍스트 #6B7684</div></div></div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:8px;background:#F04438"></span><div><div style="font-size:13px;font-weight:700;color:#0F1923">수리 중 · repair</div><div style="font-size:11.5px;color:#9AA3B0">아이콘·점 #F04438 · 배지텍스트 #E5342A</div></div></div>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #EEF2F7;border-radius:16px;box-shadow:0 4px 16px rgba(15,40,70,.04);padding:22px">
+            <div style="font-size:13px;font-weight:800;color:#0F1923;margin-bottom:14px">규칙 · 변형</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;font-size:13px;color:#4B5669;line-height:1.5">
+              <li><b style="color:#0F1923">번호</b> — 800/16px, 중립 다크 #0F1923 (상태색 아님)</li>
+              <li><b style="color:#0F1923">아이콘</b> — 공통 차량 SVG, 상태색 stroke, 1.7 두께</li>
+              <li><b style="color:#0F1923">배지</b> — 점(6px) + 알약(999px), 상태 배경/텍스트</li>
+              <li><b style="color:#0F1923">시간</b> — tabular-nums, 상태색 (사용 중/수리 중만)</li>
+              <li><b style="color:#0F1923">--compact</b> 대시보드 · <b style="color:#0F1923">--detail</b> 베이관리 · <b style="color:#0F1923">--mobile</b> 고객앱</li>
+              <li><b style="color:#0F1923">--selected</b> 민트 테두리 + 3px 링 · hover 2px 상승</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- class structure -->
+        <div style="background:#0F1923;border-radius:16px;padding:22px 24px;margin-top:18px;overflow-x:auto">
+          <div style="font-size:11px;font-weight:800;color:#5FE8DD;letter-spacing:.8px;margin-bottom:12px">CLASS STRUCTURE</div>
+          <pre style="font-family:'Outfit',ui-monospace,monospace;font-size:12.5px;line-height:1.75;color:#CBD5E1;margin:0"><span style="color:#7DD3FC">.bay-card</span>                      <span style="color:#64748B">/* 카드 컨테이너 */</span>
+  <span style="color:#7DD3FC">.bay-card__number</span>            <span style="color:#64748B">/* 베이 번호 */</span>
+  <span style="color:#7DD3FC">.bay-card__icon</span>              <span style="color:#64748B">/* 차량 아이콘 */</span>
+  <span style="color:#7DD3FC">.bay-badge</span> <span style="color:#7DD3FC">.bay-badge__dot</span>   <span style="color:#64748B">/* 상태 배지(점+텍스트) */</span>
+  <span style="color:#7DD3FC">.bay-card__time</span>              <span style="color:#64748B">/* 남은/경과 시간 */</span>
+
+<span style="color:#64748B">상태:</span>  <span style="color:#86EFAC">.bay-card--available</span>  <span style="color:#86EFAC">--inuse</span>  <span style="color:#86EFAC">--repair</span>
+<span style="color:#64748B">변형:</span>  <span style="color:#FCD34D">.bay-card--compact</span>  <span style="color:#FCD34D">--detail</span>  <span style="color:#FCD34D">--mobile</span>  <span style="color:#FCD34D">--selected</span></pre>
         </div>
       </section>
 
